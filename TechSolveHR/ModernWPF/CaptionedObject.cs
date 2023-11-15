@@ -1,7 +1,6 @@
-﻿#nullable enable
-using System;
+﻿using System;
 
-namespace GenshinLyreMidiPlayer.WPF.ModernWPF;
+namespace TechSolveHR.ModernWPF;
 
 public class CaptionedObject<T>
 {

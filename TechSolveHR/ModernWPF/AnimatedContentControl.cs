@@ -1,8 +1,8 @@
 ﻿using System.Windows.Controls;
-using GenshinLyreMidiPlayer.WPF.ModernWPF.Animation;
-using GenshinLyreMidiPlayer.WPF.ViewModels;
+using TechSolveHR.ModernWPF.Animation;
+using TechSolveHR.ViewModels;
 
-namespace GenshinLyreMidiPlayer.WPF.ModernWPF;
+namespace TechSolveHR.ModernWPF;
 
 public class AnimatedContentControl : ContentControl
 {

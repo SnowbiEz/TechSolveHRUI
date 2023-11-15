@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace GenshinLyreMidiPlayer.WPF.ModernWPF;
+namespace TechSolveHR.ModernWPF;
 
 public class TrackGroupKeyConverter : IValueConverter
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using Humanizer;
 using ModernWpf.Controls;
 
-namespace GenshinLyreMidiPlayer.WPF.ModernWPF.Errors;
+namespace TechSolveHR.ModernWPF.Errors;
 
 public class ErrorContentDialog : ContentDialog
 {

@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
-namespace GenshinLyreMidiPlayer.WPF.ModernWPF.Animation;
+namespace TechSolveHR.ModernWPF.Animation;
 
 public class Animation
 {
@@ -45,9 +45,9 @@ public class Animation
     private BitmapCache GetBitmapCache()
     {
 #if NETCOREAPP || NET462
-        return new(VisualTreeHelper.GetDpi(_element).PixelsPerDip);
+        return new BitmapCache(VisualTreeHelper.GetDpi(_element).PixelsPerDip);
 #else
-            return _defaultBitmapCache;
+        return _defaultBitmapCache;
 #endif
     }
 

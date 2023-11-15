@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GenshinLyreMidiPlayer.WPF.ModernWPF.Theme;
+namespace TechSolveHR.ModernWPF.Theme;
 
 public class AppThemes : List<AppTheme>
 {

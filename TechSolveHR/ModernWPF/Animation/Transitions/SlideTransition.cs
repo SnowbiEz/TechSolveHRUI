@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
-namespace GenshinLyreMidiPlayer.WPF.ModernWPF.Animation.Transitions;
+namespace TechSolveHR.ModernWPF.Animation.Transitions;
 
 /// <summary>
 ///     Defines constants that describe the type of animation to play during a slide
@@ -102,7 +102,7 @@ public sealed class SlideTransition : Transition, ISlideNavigationTransitionInfo
             element.SetCurrentValue(UIElement.RenderTransformProperty, new TranslateTransform());
         }
 
-        return new(element, storyboard);
+        return new Animation(element, storyboard);
     }
 
     protected override Animation GetExitAnimation(FrameworkElement element, bool movingBackwards)
@@ -185,7 +185,7 @@ public sealed class SlideTransition : Transition, ISlideNavigationTransitionInfo
             element.SetCurrentValue(UIElement.RenderTransformProperty, new TranslateTransform());
         }
 
-        return new(element, storyboard);
+        return new Animation(element, storyboard);
     }
 
     #region Effect

@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using ModernWpf;
 
-namespace GenshinLyreMidiPlayer.WPF.ModernWPF.Theme;
+namespace TechSolveHR.ModernWPF.Theme;
 
 public class AppThemeConverter : IValueConverter
 {

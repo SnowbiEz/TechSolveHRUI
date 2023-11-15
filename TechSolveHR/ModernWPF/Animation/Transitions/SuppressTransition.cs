@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace GenshinLyreMidiPlayer.WPF.ModernWPF.Animation.Transitions;
+namespace TechSolveHR.ModernWPF.Animation.Transitions;
 
 /// <summary>
 ///     Specifies that animations are suppressed during navigation.

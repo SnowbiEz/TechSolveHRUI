@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
-namespace GenshinLyreMidiPlayer.WPF.ModernWPF.Animation.Transitions;
+namespace TechSolveHR.ModernWPF.Animation.Transitions;
 
 /// <summary>
 ///     Specifies the animation to run when content appears on a Page.
@@ -47,7 +47,7 @@ public sealed class EntranceTransition : Transition
             element.SetCurrentValue(UIElement.RenderTransformProperty, new TranslateTransform());
         }
 
-        return new(element, storyboard);
+        return new Animation(element, storyboard);
     }
 
     protected override Animation GetExitAnimation(FrameworkElement element, bool movingBackwards)
@@ -94,6 +94,6 @@ public sealed class EntranceTransition : Transition
             storyboard.Children.Add(opacityAnim);
         }
 
-        return new(element, storyboard);
+        return new Animation(element, storyboard);
     }
 }

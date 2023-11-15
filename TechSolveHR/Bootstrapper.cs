@@ -1,26 +1,18 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Navigation;
-using Windows.Media;
-using Windows.Media.Playback;
-using Windows.Storage;
-using Windows.Storage.Streams;
-using GenshinLyreMidiPlayer.Data;
-using GenshinLyreMidiPlayer.Data.Properties;
-using GenshinLyreMidiPlayer.WPF.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Stylet;
 using StyletIoC;
+using TechSolveHR.Models;
+using TechSolveHR.ViewModels;
 using Wpf.Ui.Mvvm.Contracts;
 using Wpf.Ui.Mvvm.Services;
 
-namespace GenshinLyreMidiPlayer.WPF;
+namespace TechSolveHR;
 
 public class Bootstrapper : Bootstrapper<MainWindowViewModel>
 {
@@ -49,43 +41,19 @@ public class Bootstrapper : Bootstrapper<MainWindowViewModel>
         if (!Directory.Exists(path))
             Directory.CreateDirectory(path!);
 
-        builder.Bind<LyreContext>().ToFactory(_ =>
+        builder.Bind<TechSolveHRContext>().ToFactory(_ =>
         {
-            var source = Path.Combine(path!, Settings.Default.SqliteConnection);
+            var source = Path.Combine(path!, "data.db");
 
-            var options = new DbContextOptionsBuilder<LyreContext>()
+            var options = new DbContextOptionsBuilder<TechSolveHRContext>()
                 .UseSqlite($"Data Source={source}")
                 .Options;
 
-            var db = new LyreContext(options);
+            var db = new TechSolveHRContext(options);
             db.Database.EnsureCreated();
 
             return db;
         });
-
-        builder.Bind<MediaPlayer>().ToFactory(_ =>
-        {
-            var player = new MediaPlayer();
-            var controls = player.SystemMediaTransportControls;
-
-            controls.IsEnabled           = true;
-            controls.DisplayUpdater.Type = MediaPlaybackType.Music;
-
-            Task.Run(async () =>
-            {
-                const string name = "item_windsong_lyre.png";
-                var location = Path.Combine(path!, name);
-
-                var uri = new Uri($"pack://application:,,,/{name}");
-                var resource = Application.GetResourceStream(uri)!.Stream;
-                Image.FromStream(resource).Save(location);
-
-                var file = await StorageFile.GetFileFromPathAsync(location);
-                controls.DisplayUpdater.Thumbnail = RandomAccessStreamReference.CreateFromFile(file);
-            });
-
-            return player;
-        }).InSingletonScope();
 
         builder.Bind<IThemeService>().To<ThemeService>().InSingletonScope();
     }

@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Media.Animation;
 
-namespace GenshinLyreMidiPlayer.WPF.ModernWPF.Animation;
+namespace TechSolveHR.ModernWPF.Animation;
 
 /// <summary>
 ///     Provides parameter info for the Frame.Navigate method. Controls how the transition
@@ -32,10 +32,10 @@ public abstract class Transition : DependencyObject
 
     static Transition()
     {
-        AccelerateKeySpline = new(0.7, 0, 1, 0.5);
+        AccelerateKeySpline = new KeySpline(0.7, 0, 1, 0.5);
         AccelerateKeySpline.Freeze();
 
-        DecelerateKeySpline = new(0.1, 0.9, 0.2, 1);
+        DecelerateKeySpline = new KeySpline(0.1, 0.9, 0.2, 1);
         DecelerateKeySpline.Freeze();
     }
 

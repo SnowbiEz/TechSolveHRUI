@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
-namespace GenshinLyreMidiPlayer.WPF.ModernWPF.Animation.Transitions;
+namespace TechSolveHR.ModernWPF.Animation.Transitions;
 
 /// <summary>
 ///     Specifies the animation to run when a user navigates forward in a logical hierarchy,
@@ -89,7 +89,7 @@ public sealed class DrillInTransition : Transition
         element.SetCurrentValue(UIElement.RenderTransformProperty, new ScaleTransform());
         element.SetCurrentValue(UIElement.RenderTransformOriginProperty, new Point(0.5, 0.5));
 
-        return new(element, storyboard);
+        return new Animation(element, storyboard);
     }
 
     protected override Animation GetExitAnimation(FrameworkElement element, bool movingBackwards)
@@ -107,6 +107,6 @@ public sealed class DrillInTransition : Transition
         Storyboard.SetTargetProperty(opacityAnim, OpacityPath);
         storyboard.Children.Add(opacityAnim);
 
-        return new(element, storyboard);
+        return new Animation(element, storyboard);
     }
 }
