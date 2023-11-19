@@ -1,4 +1,4 @@
-using JetBrains.Annotations;
+using System.Linq;
 using ModernWpf;
 using Stylet;
 using StyletIoC;
@@ -11,7 +11,6 @@ using Wpf.Ui.Mvvm.Contracts;
 
 namespace TechSolveHR.ViewModels;
 
-[UsedImplicitly]
 public class MainWindowViewModel : Conductor<IScreen>
 {
     public static NavigationStore Navigation = null!;
@@ -25,20 +24,28 @@ public class MainWindowViewModel : Conductor<IScreen>
         _ioc   = ioc;
         _theme = theme;
 
-        ActiveItem = SettingsView = new SettingsPageViewModel(ioc, this);
+        SettingsPage = new SettingsPageViewModel(ioc, this);
+        LoginPage    = new LoginViewModel(ioc, this);
+        HomePage     = new HomeViewModel(ioc, this);
     }
 
-    public SettingsPageViewModel SettingsView { get; }
+    public HomeViewModel HomePage { get; }
+
+    public LoginViewModel LoginPage { get; }
+
+    public Screen FirstPage => HomePage;
+
+    public SettingsPageViewModel SettingsPage { get; }
 
     public string Title { get; set; }
 
     public void Navigate(INavigation sender, RoutedNavigationEventArgs args)
     {
-        if ((args.CurrentPage as NavigationItem)?.Tag is IScreen viewModel)
+        if (args.CurrentPage is NavigationItem { Tag: IScreen viewModel })
             ActivateItem(viewModel);
     }
 
-    public void NavigateToSettings() => ActivateItem(SettingsView);
+    public void NavigateToSettings() => ActivateItem(SettingsPage);
 
     public void ToggleTheme()
     {
@@ -51,12 +58,16 @@ public class MainWindowViewModel : Conductor<IScreen>
             _                      => ApplicationTheme.Dark
         };
 
-        SettingsView.OnThemeChanged();
+        SettingsPage.OnThemeChanged();
     }
 
     protected override async void OnViewLoaded()
     {
         Navigation = ((MainWindowView) View).RootNavigation;
-        SettingsView.OnThemeChanged();
+        SettingsPage.OnThemeChanged();
+
+        var navigationItem = Navigation.Items.First(x => x is NavigationItem item && item.Tag == FirstPage);
+        Navigation.SelectedPageIndex = Navigation.Items.IndexOf(navigationItem);
+        ActivateItem(FirstPage);
     }
 }

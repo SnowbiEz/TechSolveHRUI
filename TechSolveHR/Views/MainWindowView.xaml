@@ -62,16 +62,26 @@
 
             <ui:NavigationStore
                 x:Name="RootNavigation" Margin="6,0" Precache="False"
-                SelectedPageIndex="0" Navigated="{s:Action Navigate}"
+                Navigated="{s:Action Navigate}"
                 Frame="{Binding ElementName=RootFrame, Mode=OneWay}">
                 <ui:NavigationStore.Items>
+                    <ui:NavigationItem
+                        Content="Login" Icon="Person12"
+                        PageType="{x:Type pages:LoginView}"
+                        Tag="{Binding LoginPage}" />
+
+                    <ui:NavigationItem
+                        Content="Home" Icon="Home12"
+                        PageType="{x:Type pages:HomeView}"
+                        Tag="{Binding HomePage}"
+                        IsEnabled="{Binding LoginPage.IsLoggedIn}" />
                     <ui:NavigationSeparator />
                 </ui:NavigationStore.Items>
                 <ui:NavigationStore.Footer>
                     <ui:NavigationItem Content="Theme" Icon="DarkTheme24" Command="{s:Action ToggleTheme}" />
                     <ui:NavigationItem Content="Settings" Icon="Settings16"
                                        PageType="{x:Type pages:SettingsPageView}"
-                                       Tag="{Binding SettingsView}" />
+                                       Tag="{Binding SettingsPage}" />
                 </ui:NavigationStore.Footer>
 
             </ui:NavigationStore>

@@ -15,9 +15,9 @@
                     </s:ApplicationLoader.Bootstrapper>
                 </s:ApplicationLoader>
 
-                <modern:ThemeResources />
+                <!--<modern:ThemeResources />
                 <modern:XamlControlsResources />
-                <modern:IntellisenseResources Source="/ModernWpf;component/DesignTime/DesignTimeResources.xaml" />
+                <modern:IntellisenseResources Source="/ModernWpf;component/DesignTime/DesignTimeResources.xaml" />-->
 
                 <ui:ThemesDictionary Theme="Dark" />
                 <ui:ControlsDictionary />
@@ -31,6 +31,9 @@
                         <Setter Property="MinWidth" Value="200" />
                     </Style>
                     <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                        <Setter Property="MinWidth" Value="200" />
+                    </Style>
+                    <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
                         <Setter Property="MinWidth" Value="200" />
                     </Style>
                     <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">

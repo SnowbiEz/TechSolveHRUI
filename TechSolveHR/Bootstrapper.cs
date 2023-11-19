@@ -41,15 +41,15 @@ public class Bootstrapper : Bootstrapper<MainWindowViewModel>
         if (!Directory.Exists(path))
             Directory.CreateDirectory(path!);
 
-        builder.Bind<TechSolveHRContext>().ToFactory(_ =>
+        builder.Bind<DatabaseContext>().ToFactory(_ =>
         {
             var source = Path.Combine(path!, "data.db");
 
-            var options = new DbContextOptionsBuilder<TechSolveHRContext>()
+            var options = new DbContextOptionsBuilder<DatabaseContext>()
                 .UseSqlite($"Data Source={source}")
                 .Options;
 
-            var db = new TechSolveHRContext(options);
+            var db = new DatabaseContext(options);
             db.Database.EnsureCreated();
 
             return db;

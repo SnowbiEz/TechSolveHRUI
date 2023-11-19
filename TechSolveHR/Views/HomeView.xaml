@@ -1,0 +1,48 @@
+﻿<UserControl
+    x:Class="TechSolveHR.Views.HomeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
+
+    xmlns:viewModels="clr-namespace:TechSolveHR.ViewModels"
+
+    d:DataContext="{d:DesignInstance Type=viewModels:HomeViewModel}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TabControl>
+            <TabItem Header="Personal">
+                <GroupBox Header="Personal" />
+            </TabItem>
+            <TabItem Header="Job">
+                <GroupBox Header="Job" />
+            </TabItem>
+            <TabItem Header="Time Off">
+                <GroupBox Header="Time Off" />
+            </TabItem>
+            <TabItem Header="Benefits">
+                <GroupBox Header="Benefits" />
+            </TabItem>
+            <TabItem Header="Pay Info">
+                <GroupBox Header="Pay Info" />
+            </TabItem>
+            <TabItem Header="Performance">
+                <GroupBox Header="Performance" />
+            </TabItem>
+            <TabItem Header="Training">
+                <GroupBox Header="Training" />
+            </TabItem>
+            <TabItem Header="Documents">
+                <GroupBox Header="Documents" />
+            </TabItem>
+            <TabItem Header="Notes">
+                <GroupBox Header="Notes" />
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

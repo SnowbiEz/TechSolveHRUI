@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using System.Threading;
-using JetBrains.Annotations;
 using ModernWpf;
 using Stylet;
 using StyletIoC;
@@ -28,25 +26,17 @@ public class SettingsPageViewModel : Screen
         _main   = main;
     }
 
-    [UsedImplicitly] public CancellationTokenSource? PlayTimerToken { get; private set; }
-
     public static CaptionedObject<Transition>? Transition { get; set; } =
         TransitionCollection.Transitions[0];
 
-    public DateTime DateTime { get; set; } = DateTime.Now;
-
     public static Version ProgramVersion => Assembly.GetExecutingAssembly().GetName().Version!;
 
-    [UsedImplicitly]
     public void OnThemeChanged() => _theme.SetTheme(ThemeManager.Current.ApplicationTheme switch
     {
         ApplicationTheme.Light => ThemeType.Light,
         ApplicationTheme.Dark  => ThemeType.Dark,
         _                      => _theme.GetSystemTheme()
     });
-
-    [UsedImplicitly]
-    public void SetTimeToNow() => DateTime = DateTime.Now;
 
     protected override void OnActivate() { }
 }
