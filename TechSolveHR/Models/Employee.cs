@@ -19,6 +19,8 @@ public class Employee
 
     public virtual PersonalInformation Data { get; set; } = new();
 
+    public virtual EmergencyContact Contacts { get; set; } = new();
+
     public string Password { get; set; } = null!;
 
     public string Status { get; set; } = "Active";
@@ -129,4 +131,12 @@ public class PersonalInformation
     public string? TelephoneNumber { get; set; }
 
     public string? Tin { get; set; }
+}
+
+public class EmergencyContact
+{
+    public Guid Id { get; set; }
+    public string? ContactName { get; set; }
+    public string? ContactNumber { get; set; }
+    public string? Relationship { get; set; }
 }
