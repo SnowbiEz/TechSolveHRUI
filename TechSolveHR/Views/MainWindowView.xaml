@@ -70,11 +70,19 @@
                         PageType="{x:Type pages:LoginView}"
                         Tag="{Binding LoginPage}" />
 
+                    <ui:NavigationSeparator />
+
                     <ui:NavigationItem
                         Content="Home" Icon="Home12"
                         PageType="{x:Type pages:HomeView}"
                         Tag="{Binding HomePage}"
-                        IsEnabled="{Binding LoginPage.IsLoggedIn}" />
+                        IsEnabled="{Binding IsLoggedIn}" />
+
+                    <ui:NavigationItem
+                        Content="Info" Icon="PersonInfo16"
+                        PageType="{x:Type pages:PersonalInfoView}"
+                        Tag="{Binding PersonalInfoPage}"
+                        IsEnabled="{Binding IsLoggedIn}" />
                     <ui:NavigationSeparator />
                 </ui:NavigationStore.Items>
                 <ui:NavigationStore.Footer>

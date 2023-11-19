@@ -6,6 +6,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
 
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:modern="http://schemas.modernwpf.com/2019"
+
+    xmlns:s="https://github.com/canton7/Stylet"
     xmlns:viewModels="clr-namespace:TechSolveHR.ViewModels"
 
     d:DataContext="{d:DesignInstance Type=viewModels:HomeViewModel}">
@@ -15,34 +19,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TabControl>
-            <TabItem Header="Personal">
-                <GroupBox Header="Personal" />
-            </TabItem>
-            <TabItem Header="Job">
-                <GroupBox Header="Job" />
-            </TabItem>
-            <TabItem Header="Time Off">
-                <GroupBox Header="Time Off" />
-            </TabItem>
-            <TabItem Header="Benefits">
-                <GroupBox Header="Benefits" />
-            </TabItem>
-            <TabItem Header="Pay Info">
-                <GroupBox Header="Pay Info" />
-            </TabItem>
-            <TabItem Header="Performance">
-                <GroupBox Header="Performance" />
-            </TabItem>
-            <TabItem Header="Training">
-                <GroupBox Header="Training" />
-            </TabItem>
-            <TabItem Header="Documents">
-                <GroupBox Header="Documents" />
-            </TabItem>
-            <TabItem Header="Notes">
-                <GroupBox Header="Notes" />
-            </TabItem>
-        </TabControl>
+   
     </Grid>
 </UserControl>

@@ -46,7 +46,9 @@ public class Bootstrapper : Bootstrapper<MainWindowViewModel>
             var source = Path.Combine(path!, "data.db");
 
             var options = new DbContextOptionsBuilder<DatabaseContext>()
+                .UseLazyLoadingProxies()
                 .UseSqlite($"Data Source={source}")
+                
                 .Options;
 
             var db = new DatabaseContext(options);
@@ -56,5 +58,6 @@ public class Bootstrapper : Bootstrapper<MainWindowViewModel>
         });
 
         builder.Bind<IThemeService>().To<ThemeService>().InSingletonScope();
+        builder.Bind<ISnackbarService>().To<SnackbarService>().InSingletonScope();
     }
 }

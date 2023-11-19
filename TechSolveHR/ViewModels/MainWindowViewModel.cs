@@ -1,7 +1,10 @@
+using System;
 using System.Linq;
+using System.Web.Helpers;
 using ModernWpf;
 using Stylet;
 using StyletIoC;
+using TechSolveHR.Models;
 using TechSolveHR.Views;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Common;
@@ -11,33 +14,101 @@ using Wpf.Ui.Mvvm.Contracts;
 
 namespace TechSolveHR.ViewModels;
 
-public class MainWindowViewModel : Conductor<IScreen>
+public class MainWindowViewModel : Conductor<IScreen>,
+    IHandle<LoggedInEvent>, IHandle<LoggedOutEvent>
 {
     public static NavigationStore Navigation = null!;
+    private readonly IEventAggregator _events;
     private readonly IContainer _ioc;
     private readonly IThemeService _theme;
 
-    public MainWindowViewModel(IContainer ioc, IThemeService theme)
+    public MainWindowViewModel(IContainer ioc, IEventAggregator events, IThemeService theme)
     {
         Title = $"Tech Solve HR System {SettingsPageViewModel.ProgramVersion}";
 
-        _ioc   = ioc;
-        _theme = theme;
+        _ioc    = ioc;
+        _events = events;
+        _theme  = theme;
 
-        SettingsPage = new SettingsPageViewModel(ioc, this);
-        LoginPage    = new LoginViewModel(ioc, this);
-        HomePage     = new HomeViewModel(ioc, this);
+        events.Subscribe(this);
+
+        var db = ioc.Get<DatabaseContext>();
+
+        if (!db.Employees.Any())
+        {
+            var employee = new Employee
+            {
+                Username = "charlie",
+                Password = Crypto.HashPassword("password"),
+                CompanyId = "1",
+                Status    = "Active",
+                Department = new Department
+                {
+                    Name = "Human Resources"
+                },
+                Division = new Division
+                {
+                    Name = "Tech Solve"
+                },
+                Title = "HR Manager",
+                Data = new PersonalInformation
+                {
+                    FirstName     = "Charlotte",
+                    MiddleName    = "Rose",
+                    LastName      = "Doyle",
+                    PreferredName = "Charlie",
+                    Gender        = "Female",
+                    DateOfBirth   = new DateTime(1999, 1, 1),
+                    DateOfHire    = new DateTime(2021, 1, 1),
+                    Address = new Address
+                    {
+                        StreetAddress = "1234 Main St",
+                        City          = "Columbus",
+                        State         = "OH",
+                        ZipCode       = "43215"
+                    },
+                    MaritalStatus   = "Single",
+                    PhilHealth      = "123456789012",
+                    Sss             = "12345678901234567",
+                    PhoneNumber     = "1234567890",
+                    TelephoneNumber = "1234567890",
+                    Tin             = "1234567890"
+                }
+            };
+
+            db.Employees.Add(employee);
+            db.SaveChanges();
+        }
+
+        SettingsPage     = new SettingsPageViewModel(ioc, this);
+        LoginPage        = new LoginViewModel(ioc, events, this);
+        HomePage         = new HomeViewModel(ioc, this);
+        PersonalInfoPage = new PersonalInfoViewModel(ioc, this);
     }
+
+    public bool IsLoggedIn => true || LoggedInUser is not null;
+
+    public Employee? LoggedInUser { get; set; }
 
     public HomeViewModel HomePage { get; }
 
     public LoginViewModel LoginPage { get; }
 
-    public Screen FirstPage => HomePage;
+    public PersonalInfoViewModel PersonalInfoPage { get; }
+
+    public Screen FirstPage => LoginPage;
 
     public SettingsPageViewModel SettingsPage { get; }
 
     public string Title { get; set; }
+
+    public void Handle(LoggedInEvent message)
+    {
+        LoggedInUser = message.Employee;
+        NavigateToItem(HomePage);
+    }
+
+    public void Handle(LoggedOutEvent message) => throw new NotImplementedException();
 
     public void Navigate(INavigation sender, RoutedNavigationEventArgs args)
     {
@@ -66,8 +137,18 @@ public class MainWindowViewModel : Conductor<IScreen>
         Navigation = ((MainWindowView) View).RootNavigation;
         SettingsPage.OnThemeChanged();
 
-        var navigationItem = Navigation.Items.First(x => x is NavigationItem item && item.Tag == FirstPage);
+        NavigateToItem(FirstPage);
+    }
+
+    private void NavigateToItem(IScreen viewModel)
+    {
+        var navigationItem
+            = (NavigationItem) Navigation.Items.First(x => x is NavigationItem item && item.Tag == viewModel);
         Navigation.SelectedPageIndex = Navigation.Items.IndexOf(navigationItem);
-        ActivateItem(FirstPage);
+        Navigation.Navigate(navigationItem.PageType);
     }
 }
+
+public record LoggedOutEvent;
+
+public record LoggedInEvent(Employee Employee);

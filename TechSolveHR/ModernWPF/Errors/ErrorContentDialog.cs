@@ -6,7 +6,7 @@ using ModernWpf.Controls;
 
 namespace TechSolveHR.ModernWPF.Errors;
 
-public class ErrorContentDialog : ContentDialog
+public class ErrorContentDialog : ModernWpf.Controls.ContentDialog
 {
     public ErrorContentDialog(Exception e, IReadOnlyCollection<Enum>? options = null, string? closeText = null)
     {

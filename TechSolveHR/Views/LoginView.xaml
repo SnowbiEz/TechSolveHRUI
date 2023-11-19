@@ -14,12 +14,6 @@
 
     d:DataContext="{d:DesignInstance Type=viewModels:LoginViewModel}">
     <Grid>
-        <Grid.Resources>
-            <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
-                <Setter Property="MaxWidth" Value="200" />
-            </Style>
-        </Grid.Resources>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
@@ -27,7 +21,7 @@
         </Grid.RowDefinitions>
 
         <GroupBox Header="Welcome!" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <modern:SimpleStackPanel>
+            <modern:SimpleStackPanel Width="300">
                 <ui:TextBox Icon="Person12" PlaceholderText="Username" Text="{Binding Username, Mode=OneWayToSource}" />
                 <ui:PasswordBox
                     Icon="Password16" PlaceholderText="Password"

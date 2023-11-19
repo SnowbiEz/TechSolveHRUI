@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Stylet;
@@ -9,45 +10,35 @@ namespace TechSolveHR.ViewModels;
 
 public class LoginViewModel : Screen
 {
+    private readonly IEventAggregator _events;
     private readonly IContainer _ioc;
     private readonly MainWindowViewModel _main;
 
-    public LoginViewModel(IContainer ioc, MainWindowViewModel main)
+    public LoginViewModel(IContainer ioc, IEventAggregator events, MainWindowViewModel main)
     {
-        _ioc  = ioc;
-        _main = main;
+        _ioc    = ioc;
+        _events = events;
+        _main   = main;
     }
-
-    public Employee? LoggedInUser { get; set; }
-
-    public bool IsLoggedIn => true;
 
     public string Password { get; set; } = string.Empty;
 
     public string Username { get; set; } = string.Empty;
 
-    public void Login()
+    public async Task Login()
     {
-        if (string.IsNullOrWhiteSpace(Username))
-        {
-            return;
-        }
+        var db = _ioc.Get<DatabaseContext>();
+        _events.Publish(new LoggedInEvent(db.Employees.First()));
+        return;
+        if (string.IsNullOrWhiteSpace(Username)) return;
+        if (string.IsNullOrWhiteSpace(Password)) return;
 
-        if (string.IsNullOrWhiteSpace(Password))
-        {
-            return;
-        }
+        var employee = await db.Employees.FirstOrDefaultAsync(x => x.Username == Username);
+        if (employee == null) return;
 
-        if (VerifyPasswordAsync(Username, Password).Result)
+        if (Crypto.VerifyHashedPassword(employee.Password, Password))
         {
-            LoggedInUser = _ioc.Get<DatabaseContext>().Users.FirstOrDefaultAsync(x => x.Username == Username).Result;
-            _main.NavigateToSettings();
+            _events.Publish(new LoggedInEvent(employee));
         }
-    }
-
-    public async Task<bool> VerifyPasswordAsync(string username, string password)
-    {
-        var user = await _ioc.Get<DatabaseContext>().Users.FirstOrDefaultAsync(x => x.Username == username);
-        return user is not null && Crypto.VerifyHashedPassword(user.Password, password);
     }
 }

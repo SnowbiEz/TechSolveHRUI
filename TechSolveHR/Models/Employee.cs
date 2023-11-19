@@ -5,17 +5,29 @@ namespace TechSolveHR.Models;
 
 public class Employee
 {
+    public virtual Department? Department { get; set; }
+
+    public virtual Division? Division { get; set; }
+
     public Guid Id { get; set; }
 
     public virtual List<Attendance> Attendances { get; set; } = new();
+
+    public virtual List<Leave> Leaves { get; set; } = new();
+
+    public virtual List<Performance> Performances { get; set; } = new();
 
     public virtual PersonalInformation Data { get; set; } = new();
 
     public string Password { get; set; } = null!;
 
+    public string Status { get; set; } = "Active";
+
     public string Username { get; set; } = null!;
 
     public string? CompanyId { get; set; }
+
+    public string? Title { get; set; }
 }
 
 public class Leave
@@ -31,11 +43,17 @@ public class Leave
 
 public class Performance
 {
-    public virtual Employee Employee { get; set; } = null!;
+    public DateTimeOffset DateTime { get; set; }
 
     public virtual Employee Evaluator { get; set; } = null!;
 
     public Guid Id { get; set; }
+
+    public string? Category { get; set; }
+
+    public string? Feedback { get; set; }
+
+    public string? Grade { get; set; }
 }
 
 public class Attendance
@@ -49,33 +67,52 @@ public class Attendance
     public TimeSpan Length => TimeOut - TimeIn;
 }
 
+public class Address
+{
+    public Guid Id { get; set; }
+
+    public string? City { get; set; }
+
+    public string? State { get; set; }
+
+    public string? StreetAddress { get; set; }
+
+    public string? ZipCode { get; set; }
+}
+
+public class Department
+{
+    public Guid Id { get; set; }
+
+    public virtual List<Employee> Employees { get; set; } = new();
+
+    public string Name { get; set; } = null!;
+}
+
+public class Division
+{
+    public Guid Id { get; set; }
+
+    public virtual List<Employee> Employees { get; set; } = new();
+
+    public string Name { get; set; } = null!;
+}
+
 public class PersonalInformation
 {
-    public DateTimeOffset HireDate { get; set; }
+    public virtual Address Address { get; set; } = new();
 
     public DateTimeOffset? DateOfBirth { get; set; }
 
     public DateTimeOffset? DateOfHire { get; set; }
 
-    public Employee? Manager { get; set; }
-
     public Guid Id { get; set; }
-
-    public string? Address { get; set; }
-
-    public string? Department { get; set; }
-
-    public string? Division { get; set; }
-
-    public string? EmployeeId { get; set; }
 
     public string? FirstName { get; set; }
 
     public string? Gender { get; set; }
 
     public string? LastName { get; set; }
-
-    public string? Location { get; set; }
 
     public string? MaritalStatus { get; set; }
 
@@ -87,9 +124,9 @@ public class PersonalInformation
 
     public string? PreferredName { get; set; }
 
-    public string? Role { get; set; }
-
     public string? Sss { get; set; }
+
+    public string? TelephoneNumber { get; set; }
 
     public string? Tin { get; set; }
 }

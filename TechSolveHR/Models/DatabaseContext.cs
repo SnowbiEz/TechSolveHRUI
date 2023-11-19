@@ -6,5 +6,5 @@ public class DatabaseContext : DbContext
 {
     public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
 
-    public DbSet<Employee> Users { get; set; } = null!;
+    public DbSet<Employee> Employees { get; set; } = null!;
 }
