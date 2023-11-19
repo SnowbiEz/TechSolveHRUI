@@ -84,6 +84,7 @@ public class MainWindowViewModel : Conductor<IScreen>,
         LoginPage        = new LoginViewModel(ioc, events, this);
         HomePage         = new HomeViewModel(ioc, this);
         PersonalInfoPage = new PersonalInfoViewModel(ioc, this);
+        RegistrationPage = new RegistrationViewModel(ioc, this);
     }
 
     public bool IsLoggedIn => true || LoggedInUser is not null;
@@ -95,6 +96,8 @@ public class MainWindowViewModel : Conductor<IScreen>,
     public LoginViewModel LoginPage { get; }
 
     public PersonalInfoViewModel PersonalInfoPage { get; }
+
+    public RegistrationViewModel RegistrationPage { get; }
 
     public Screen FirstPage => LoginPage;
 

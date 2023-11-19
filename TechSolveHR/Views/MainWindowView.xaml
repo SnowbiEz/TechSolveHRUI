@@ -83,7 +83,14 @@
                         PageType="{x:Type pages:PersonalInfoView}"
                         Tag="{Binding PersonalInfoPage}"
                         IsEnabled="{Binding IsLoggedIn}" />
+
+                    <ui:NavigationItem
+                        Content="Register" Icon="ClipboardBulletListLtr20"
+                        PageType="{x:Type pages:RegistrationView}"
+                        Tag="{Binding RegistrationPage}"
+                        IsEnabled="{Binding IsLoggedIn}"/>
                     <ui:NavigationSeparator />
+
                 </ui:NavigationStore.Items>
                 <ui:NavigationStore.Footer>
                     <ui:NavigationItem Content="Theme" Icon="DarkTheme24" Command="{s:Action ToggleTheme}" />
