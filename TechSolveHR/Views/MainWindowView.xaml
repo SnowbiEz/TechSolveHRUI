@@ -15,7 +15,7 @@
 
     d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
 
-    Title="{Binding Title}" Height="850" Width="650" MinWidth="435"
+    Title="{Binding Title}" Height="850" Width="1200" MinWidth="435"
     Background="{ui:ThemeResource ApplicationBackgroundBrush}" ExtendsContentIntoTitleBar="True"
     WindowBackdropType="Mica" WindowCornerPreference="Round" WindowStartupLocation="CenterScreen">
     <Grid>
@@ -82,6 +82,12 @@
                         Content="Info" Icon="PersonInfo16"
                         PageType="{x:Type pages:PersonalInfoView}"
                         Tag="{Binding PersonalInfoPage}"
+                        IsEnabled="{Binding IsLoggedIn}" />
+
+                    <ui:NavigationItem
+                        Content="People" Icon="PeopleList20"
+                        PageType="{x:Type pages:EmployeeListView}"
+                        Tag="{Binding EmployeeListPage}"
                         IsEnabled="{Binding IsLoggedIn}" />
 
                     <ui:NavigationItem

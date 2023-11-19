@@ -21,14 +21,19 @@ public class LoginViewModel : Screen
         _main   = main;
     }
 
+    public bool LoginError { get; set; }
+
     public string Password { get; set; } = string.Empty;
 
     public string Username { get; set; } = string.Empty;
 
     public async Task Login()
     {
+        LoginError = true;
+
         var db = _ioc.Get<DatabaseContext>();
         _events.Publish(new LoggedInEvent(db.Employees.First()));
+
         return;
         if (string.IsNullOrWhiteSpace(Username)) return;
         if (string.IsNullOrWhiteSpace(Password)) return;
@@ -38,6 +43,7 @@ public class LoginViewModel : Screen
 
         if (Crypto.VerifyHashedPassword(employee.Password, Password))
         {
+            LoginError = false;
             _events.Publish(new LoggedInEvent(employee));
         }
     }

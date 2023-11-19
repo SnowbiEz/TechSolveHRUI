@@ -36,10 +36,10 @@ public class MainWindowViewModel : Conductor<IScreen>,
 
         if (!db.Employees.Any())
         {
-            var employee = new Employee
+            var employee1 = new Employee
             {
-                Username = "charlie",
-                Password = Crypto.HashPassword("password"),
+                Username  = "charlie",
+                Password  = Crypto.HashPassword("password"),
                 CompanyId = "1",
                 Status    = "Active",
                 Department = new Department
@@ -76,7 +76,49 @@ public class MainWindowViewModel : Conductor<IScreen>,
                 }
             };
 
-            db.Employees.Add(employee);
+            var employee2 = new Employee
+            {
+                Username  = "manager",
+                Password  = Crypto.HashPassword("password"),
+                Manager   = employee1,
+                CompanyId = "2",
+                Status    = "Active",
+                Department = new Department
+                {
+                    Name = "Human Resources"
+                },
+                Division = new Division
+                {
+                    Name = "Tech Solve"
+                },
+                Title = "Manager",
+                Data = new PersonalInformation
+                {
+                    FirstName     = "John",
+                    MiddleName    = "Doe",
+                    LastName      = "Smith",
+                    PreferredName = "John",
+                    Gender        = "Male",
+                    DateOfBirth   = new DateTime(1985, 5, 10),
+                    DateOfHire    = DateTime.Now,
+                    Address = new Address
+                    {
+                        StreetAddress = "5678 Elm St",
+                        City          = "Columbus",
+                        State         = "OH",
+                        ZipCode       = "43215"
+                    },
+                    MaritalStatus   = "Single",
+                    PhilHealth      = "987654321098",
+                    Sss             = "98765432109876543",
+                    PhoneNumber     = "0987654321",
+                    TelephoneNumber = "0987654321",
+                    Tin             = "0987654321"
+                }
+            };
+
+            db.Employees.Add(employee1);
+            db.Employees.Add(employee2);
             db.SaveChanges();
         }
 
@@ -84,12 +126,15 @@ public class MainWindowViewModel : Conductor<IScreen>,
         LoginPage        = new LoginViewModel(ioc, events, this);
         HomePage         = new HomeViewModel(ioc, this);
         PersonalInfoPage = new PersonalInfoViewModel(ioc, this);
+        EmployeeListPage = new EmployeeListViewModel(ioc, this);
         RegistrationPage = new RegistrationViewModel(ioc, this);
     }
 
     public bool IsLoggedIn => true || LoggedInUser is not null;
 
     public Employee? LoggedInUser { get; set; }
+
+    public EmployeeListViewModel EmployeeListPage { get; }
 
     public HomeViewModel HomePage { get; }
 

@@ -1,0 +1,129 @@
+﻿<UserControl
+    x:Class="TechSolveHR.Views.EmployeeListView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
+
+    xmlns:modern="http://schemas.modernwpf.com/2019"
+
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:viewModels="clr-namespace:TechSolveHR.ViewModels"
+    xmlns:modernWpf="clr-namespace:TechSolveHR.ModernWPF"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+    xmlns:models="clr-namespace:TechSolveHR.Models"
+
+    d:DataContext="{d:DesignInstance Type=viewModels:EmployeeListViewModel}">
+    <UserControl.Resources>
+        <modernWpf:EmployeeGroupKeyConverter x:Key="EmployeeGroupKeyConverter" />
+        <CollectionViewSource x:Key="Tracks" Source="{Binding FilteredEmployees}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="Data.FirstName" Converter="{StaticResource EmployeeGroupKeyConverter}" />
+            </CollectionViewSource.GroupDescriptions>
+            <CollectionViewSource.SortDescriptions>
+                <componentModel:SortDescription PropertyName="Data.FirstName" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
+        <DataTemplate x:Key="ListViewTemplate" DataType="{x:Type models:Employee}">
+            <Grid Margin="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <ui:SymbolIcon Symbol="PersonCircle24" FontSize="50" />
+
+                <Grid Column="1" Margin="16,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <modern:SimpleStackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock FontWeight="Bold">
+                            <Run Text="{Binding Data.FirstName}" />
+                            <Run Text="{Binding Data.LastName}" />
+                        </TextBlock>
+
+                        <TextBlock FontSize="11">
+                            <Run Text="{Binding Title}" /> in
+                            <Run Text="{Binding Department.Name, FallbackValue='Unknown'}" />
+                        </TextBlock>
+
+                        <TextBlock FontSize="11">
+                            <Run Text="{Binding Data.Address.City}" />,
+                            <Run Text="{Binding Data.Address.State}" />
+                        </TextBlock>
+                    </modern:SimpleStackPanel>
+
+                    <modern:SimpleStackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                        <modern:SimpleStackPanel.Resources>
+                            <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
+                                <Setter Property="MinWidth" Value="200" />
+                                <Setter Property="FontSize" Value="11" />
+                                <Setter Property="IsReadOnly" Value="True"></Setter>
+                            </Style>
+                        </modern:SimpleStackPanel.Resources>
+
+                        <ui:TextBox Icon="Mail20" Text="{Binding EmailAddress}" />
+                        <ui:TextBox Icon="Building20" Text="{Binding Data.TelephoneNumber}" />
+                        <ui:TextBox Icon="Phone20" Text="{Binding Data.PhoneNumber}" />
+                    </modern:SimpleStackPanel>
+
+                    <modern:SimpleStackPanel Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <modern:SimpleStackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="PersonMail20" />
+                            <TextBlock>
+                                Reports to
+                                <Run Text="{Binding Manager.Data.FirstName, FallbackValue='N/A'}" />
+                                <Run Text="{Binding Manager.Data.LastName, FallbackValue=''}" />
+                            </TextBlock>
+                        </modern:SimpleStackPanel>
+                    </modern:SimpleStackPanel>
+                </Grid>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,5" />
+
+        <ListView
+            Grid.Row="1" Margin="0,5"
+
+            ItemsSource="{Binding Source={StaticResource Tracks}}"
+            ItemTemplate="{StaticResource ListViewTemplate}"
+            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+            VirtualizingPanel.VirtualizationMode="Recycling"
+
+            MouseDoubleClick="{s:Action OnEmployeeSelected}"
+            SelectedItem="{Binding SelectedEmployee}">
+            <ListView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate DataType="CollectionViewGroup">
+                            <TextBlock
+                                Text="{Binding Name, Mode=OneTime}"
+                                Style="{DynamicResource TitleTextBlockStyle}" />
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ListView.GroupStyle>
+        </ListView>
+
+        <modern:SimpleStackPanel
+            Grid.Row="2" Orientation="Horizontal"
+            HorizontalAlignment="Center" />
+    </Grid>
+</UserControl>

@@ -9,6 +9,8 @@ public class Employee
 
     public virtual Division? Division { get; set; }
 
+    public virtual Employee? Manager { get; set; }
+
     public Guid Id { get; set; }
 
     public virtual List<Attendance> Attendances { get; set; } = new();
@@ -28,6 +30,8 @@ public class Employee
     public string Username { get; set; } = null!;
 
     public string? CompanyId { get; set; }
+
+    public string? EmailAddress { get; set; }
 
     public string? Title { get; set; }
 }
@@ -50,6 +54,8 @@ public class Performance
     public virtual Employee Evaluator { get; set; } = null!;
 
     public Guid Id { get; set; }
+
+    public string? Title { get; set; }
 
     public string? Category { get; set; }
 

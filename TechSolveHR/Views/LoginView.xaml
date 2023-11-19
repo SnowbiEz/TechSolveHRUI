@@ -21,8 +21,13 @@
         </Grid.RowDefinitions>
 
         <GroupBox Header="Welcome!" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <modern:SimpleStackPanel Width="300">
-                <ui:TextBox Icon="Person12" PlaceholderText="Username" Text="{Binding Username, Mode=OneWayToSource}" />
+            <modern:SimpleStackPanel MinWidth="300">
+
+                <ui:InfoBar Title="Error" Severity="Error" IsOpen="{Binding LoginError}"
+                            
+                            Message="Invalid Username or Password! Please try again." />
+
+                    <ui:TextBox Icon="Person12" PlaceholderText="Username" Text="{Binding Username, Mode=OneWayToSource}" />
                 <ui:PasswordBox
                     Icon="Password16" PlaceholderText="Password"
                     Password="{Binding Password, Mode=TwoWay}" />
