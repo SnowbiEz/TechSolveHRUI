@@ -128,6 +128,7 @@ public class MainWindowViewModel : Conductor<IScreen>,
         PersonalInfoPage = new PersonalInfoViewModel(ioc, this);
         EmployeeListPage = new EmployeeListViewModel(ioc, this);
         RegistrationPage = new RegistrationViewModel(ioc, this);
+        AttendancePage = new AttendanceViewModel(ioc, this);
     }
 
     public bool IsLoggedIn => true || LoggedInUser is not null;
@@ -139,6 +140,8 @@ public class MainWindowViewModel : Conductor<IScreen>,
     public HomeViewModel HomePage { get; }
 
     public LoginViewModel LoginPage { get; }
+
+    public AttendanceViewModel AttendancePage { get; }
 
     public PersonalInfoViewModel PersonalInfoPage { get; }
 

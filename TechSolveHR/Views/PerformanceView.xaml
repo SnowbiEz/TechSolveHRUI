@@ -11,6 +11,9 @@
 
     xmlns:s="https://github.com/canton7/Stylet"
     xmlns:viewModels="clr-namespace:TechSolveHR.ViewModels"
+    xmlns:models="clr-namespace:TechSolveHR.Models"
+    xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+    xmlns:modernWpf="clr-namespace:TechSolveHR.ModernWPF"
 
     d:DataContext="{d:DesignInstance Type=viewModels:PerformanceViewModel}">
     <UserControl.Resources>

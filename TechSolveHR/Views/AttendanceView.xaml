@@ -1,0 +1,106 @@
+﻿<UserControl
+    x:Class="TechSolveHR.Views.AttendanceView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
+
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:modern="http://schemas.modernwpf.com/2019"
+
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:viewModels="clr-namespace:TechSolveHR.ViewModels"
+    xmlns:modernWpf="clr-namespace:TechSolveHR.ModernWPF"
+    xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+    xmlns:models="clr-namespace:TechSolveHR.Models"
+
+    d:DataContext="{d:DesignInstance Type=viewModels:AttendanceViewModel}">
+    <UserControl.Resources>
+        <modernWpf:DateTimeGroupKeyconverter x:Key="DateTimeGroupKeyconverter" />
+        <CollectionViewSource x:Key="CollectionSource" Source="{Binding Attendances}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="TimeIn" Converter="{StaticResource DateTimeGroupKeyconverter}" />
+            </CollectionViewSource.GroupDescriptions>
+            <CollectionViewSource.SortDescriptions>
+                <componentModel:SortDescription PropertyName="TimeIn" />
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+
+        <DataTemplate x:Key="ListViewTemplate" DataType="{x:Type models:Attendance}">
+            <Grid Margin="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <ui:SymbolIcon Symbol="PersonCircle24" FontSize="50" />
+
+                <Grid Column="1" Margin="16,0,0,0" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <modern:SimpleStackPanel Grid.Row="0" Grid.Column="0" Spacing="4">
+                        <modern:SimpleStackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="DoorArrowLeft16" />
+                            <TextBlock Text="{Binding TimeIn, StringFormat='{}{0:dddd, MMM dd, hh:mm}'}" />
+                        </modern:SimpleStackPanel>
+                        <TextBlock FontSize="8">Time In</TextBlock>
+                    </modern:SimpleStackPanel>
+
+                    <modern:SimpleStackPanel Grid.Row="0" Grid.Column="1" Spacing="4">
+                        <modern:SimpleStackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="DoorArrowRight16" />
+                            <TextBlock Text="{Binding TimeOut, StringFormat='{}{0:dddd, MMM dd, hh:mm}'}" />
+                        </modern:SimpleStackPanel>
+                        <TextBlock FontSize="8">Time Out</TextBlock>
+                    </modern:SimpleStackPanel>
+
+                    <modern:SimpleStackPanel Grid.Row="0" Grid.Column="2" Spacing="4">
+                        <TextBlock Text="{Binding Length, StringFormat='{}{0:%h} hours, {0:%m} mins'}" />
+                        <TextBlock FontSize="8">Length</TextBlock>
+                    </modern:SimpleStackPanel>
+                </Grid>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,5" />
+
+        <ListView
+            Grid.Row="1" Margin="0,5"
+
+            ItemsSource="{Binding Source={StaticResource CollectionSource}}"
+            ItemTemplate="{StaticResource ListViewTemplate}"
+            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+            VirtualizingPanel.VirtualizationMode="Recycling"
+
+            MouseDoubleClick="{s:Action OnAttendanceSelected}"
+            SelectedItem="{Binding SelectedAttendance}">
+            <ListView.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate DataType="CollectionViewGroup">
+                            <TextBlock
+                                Text="{Binding Name, Mode=OneTime}"
+                                Style="{DynamicResource TitleTextBlockStyle}" />
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                </GroupStyle>
+            </ListView.GroupStyle>
+        </ListView>
+
+        <modern:SimpleStackPanel
+            Grid.Row="2" Orientation="Horizontal"
+            HorizontalAlignment="Center" />
+    </Grid>
+</UserControl>

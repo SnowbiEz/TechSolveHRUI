@@ -95,6 +95,12 @@
                         PageType="{x:Type pages:RegistrationView}"
                         Tag="{Binding RegistrationPage}"
                         IsEnabled="{Binding IsLoggedIn}"/>
+
+                    <ui:NavigationItem
+                        Content="Attendance" Icon="CalendarRtl12"
+                        PageType="{x:Type pages:AttendanceView}"
+                        Tag="{Binding AttendancePage}"
+                        IsEnabled="{Binding IsLoggedIn}"/>
                     <ui:NavigationSeparator />
 
                 </ui:NavigationStore.Items>
