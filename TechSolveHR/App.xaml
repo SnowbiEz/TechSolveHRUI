@@ -24,6 +24,8 @@
 
             </ResourceDictionary.MergedDictionaries>
 
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
             <Style TargetType="modern:SimpleStackPanel">
                 <Setter Property="Spacing" Value="8" />
                 <Style.Resources>

@@ -13,32 +13,25 @@
     xmlns:viewModels="clr-namespace:TechSolveHR.ViewModels"
 
     d:DataContext="{d:DesignInstance Type=viewModels:RegistrationViewModel}">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <GroupBox Header="New Account" HorizontalAlignment="Center">
+        <modern:SimpleStackPanel Width="300">
+            <GroupBox Header="Select Manager">
+                <ComboBox
+                    ItemsSource="{Binding Employees}" SelectedItem="{Binding SelectedManager}"
+                    DisplayMemberPath="Data.Name" />
+            </GroupBox>
 
-        <GroupBox Header="New Account" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <modern:SimpleStackPanel Width="300">
-                <GroupBox Header="Select Manager">
-                    <ComboBox
-                        ItemsSource="{Binding Employees}" SelectedItem="{Binding SelectedManager}"
-                        DisplayMemberPath="Data.Name" />
-                </GroupBox>
-
-                <ui:TextBox Icon="LockClosed12" PlaceholderText="Access Level" Text="" />
+            <GroupBox Header="Access Level">
                 <ComboBox SelectedItem="{Binding AccessType}" SelectedIndex="0">
                     <ComboBoxItem>Admin</ComboBoxItem>
                     <ComboBoxItem>Employee</ComboBoxItem>
                 </ComboBox>
-                <ui:TextBox Icon="Person12" PlaceholderText="Username" Text="{Binding Username, Mode=OneWayToSource}" />
-                <ui:PasswordBox
-                    Icon="Password16" PlaceholderText="Password"
-                    Password="{Binding Password, Mode=TwoWay}" />
-                <ui:Button Appearance="Primary" Command="{s:Action Register}" HorizontalAlignment="Center">Register</ui:Button>
-            </modern:SimpleStackPanel>
-        </GroupBox>
-    </Grid>
+            </GroupBox>
+            <ui:TextBox Icon="Person12" PlaceholderText="Username" Text="{Binding Username, Mode=OneWayToSource}" />
+            <ui:PasswordBox
+                Icon="Password16" PlaceholderText="Password"
+                Password="{Binding Password, Mode=TwoWay}" />
+            <ui:Button Appearance="Primary" Command="{s:Action Register}" HorizontalAlignment="Center">Register</ui:Button>
+        </modern:SimpleStackPanel>
+    </GroupBox>
 </UserControl>

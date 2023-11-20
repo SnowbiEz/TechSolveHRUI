@@ -11,22 +11,25 @@ namespace TechSolveHR.ViewModels;
 public class RegistrationViewModel : Screen
 {
     private readonly IContainer _ioc;
-    private readonly ISnackbarService _snackbar;
+    private readonly ISnackbarService _snackBar;
+    private readonly DatabaseContext _db;
     private readonly MainWindowViewModel _main;
 
-    public RegistrationViewModel(IContainer ioc, ISnackbarService snackbar, DatabaseContext db,
-        MainWindowViewModel main)
+    public RegistrationViewModel(
+        IContainer ioc, ISnackbarService snackBar,
+        DatabaseContext db, MainWindowViewModel main)
     {
         _ioc      = ioc;
-        _snackbar = snackbar;
+        _snackBar = snackBar;
+        _db       = db;
         _main     = main;
-
-        Employees = new BindableCollection<Employee>(db.Employees);
     }
 
-    public BindableCollection<Employee> Employees { get; set; }
+    public BindableCollection<Employee> Employees => new(_db.Employees);
 
     public Employee? SelectedManager { get; set; }
+
+    public string AccessType { get; set; } = string.Empty;
 
     public string Password { get; set; } = string.Empty;
 
@@ -34,23 +37,21 @@ public class RegistrationViewModel : Screen
 
     public async Task Register()
     {
-
         if (string.IsNullOrWhiteSpace(Username))
         {
-            await _snackbar.ShowAsync("Error!", "Please provide a username.");
+            await _snackBar.ShowAsync("Error!", "Please provide a username.");
             return;
         }
 
         if (string.IsNullOrWhiteSpace(Password) || Password.Length < 8)
         {
-            await _snackbar.ShowAsync("Error!", "Password is too weak.");
+            await _snackBar.ShowAsync("Error!", "Password is too weak.");
             return;
         }
 
-        var db = _ioc.Get<DatabaseContext>();
-        if (db.Employees.Any(x => x.Username == Username))
+        if (_db.Employees.Any(x => x.Username == Username))
         {
-            await _snackbar.ShowAsync("Error!", "Username already exists");
+            await _snackBar.ShowAsync("Error!", "Username already exists");
             return;
         }
 
@@ -61,9 +62,7 @@ public class RegistrationViewModel : Screen
             Manager  = SelectedManager
         };
 
-        db.Employees.Add(employee);
-        await db.SaveChangesAsync();
+        _db.Employees.Add(employee);
+        await _db.SaveChangesAsync();
     }
-
-    public string AccessType { get; set; } = string.Empty;
 }

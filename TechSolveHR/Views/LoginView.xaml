@@ -32,7 +32,7 @@
                     Password="{Binding Password, Mode=TwoWay}" />
                 <modern:SimpleStackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <TextBlock></TextBlock>
-                    <ui:Button Command="{s:Action Login}" Appearance="Primary">Login</ui:Button>
+                    <ui:Button Command="{s:Action Login}" Appearance="Primary" IsDefault="True">Login</ui:Button>
                 </modern:SimpleStackPanel>
             </modern:SimpleStackPanel>
         </GroupBox>

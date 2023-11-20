@@ -68,20 +68,27 @@
                     <ui:NavigationItem
                         Content="Login" Icon="Person12"
                         PageType="{x:Type pages:LoginView}"
-                        Tag="{Binding LoginPage}" />
+                        Tag="{Binding LoginPage}"
+                        Visibility="{Binding IsLoggedOut, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                    <ui:NavigationSeparator />
 
                     <ui:NavigationItem
                         Content="Register" Icon="ClipboardBulletListLtr20"
                         PageType="{x:Type pages:RegistrationView}"
-                        Tag="{Binding RegistrationPage}" />
+                        Tag="{Binding RegistrationPage}"
+                        Visibility="{Binding IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-                    <ui:NavigationSeparator />
 
                     <ui:NavigationItem
                         Content="Admin" Icon="BookLetter24"
                         PageType="{x:Type pages:AdminView}"
                         Tag="{Binding AdminPage}"
-                        IsEnabled="{Binding IsAdmin}" />
+                        IsEnabled="{Binding IsAdmin}"
+                        Visibility="{Binding IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                    <ui:NavigationSeparator
+                        Visibility="{Binding IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                     <ui:NavigationItem
                         Content="Info" Icon="PersonInfo16"

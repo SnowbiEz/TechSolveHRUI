@@ -144,6 +144,8 @@ public class MainWindowViewModel : Conductor<IScreen>,
 
     public bool IsAdmin => LoggedInUser is { AccessType: "Admin" };
 
+    public bool IsLoggedOut => LoggedInUser is null;
+
     public bool IsLoggedIn => LoggedInUser is not null;
 
     public Employee? LoggedInUser { get; set; }
@@ -167,7 +169,11 @@ public class MainWindowViewModel : Conductor<IScreen>,
     public void Handle(LoggedInEvent message)
     {
         LoggedInUser = message.Employee;
-        NavigateToItem(AdminPage);
+
+        if (IsAdmin)
+            NavigateToItem(AdminPage);
+        else
+            NavigateToItem(PersonalInfoPage);
     }
 
     public void Handle(LoggedOutEvent message) => throw new NotImplementedException();
