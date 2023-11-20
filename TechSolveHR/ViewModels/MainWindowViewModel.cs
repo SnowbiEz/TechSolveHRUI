@@ -43,6 +43,7 @@ public class MainWindowViewModel : Conductor<IScreen>
         {
             var employee1 = new Employee
             {
+                AccessType = "Admin",
                 Username  = "charlie",
                 Password  = Crypto.HashPassword("password"),
                 CompanyId = "1",
@@ -178,10 +179,8 @@ public class MainWindowViewModel : Conductor<IScreen>
             TimeIn = DateTimeOffset.UtcNow
         });
 
-        if (IsAdmin)
-            NavigateToItem(AdminPage);
-        else
-            NavigateToItem(PersonalInfoPage);
+        
+        NavigateToItem(PersonalInfoPage);
     }
 
     public async Task Logout()

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using Humanizer;
 using Stylet;
 using StyletIoC;
 using TechSolveHR.Models;
@@ -26,13 +28,21 @@ public class EmployeeListViewModel : Screen
 
     public Employee? SelectedEmployee { get; set; }
 
+    public event EventHandler<Employee>? EmployeeSelected;
+
     public string FilterText { get; set; } = string.Empty;
 
-    public void OnEmployeeSelected() { }
+    public void OnEmployeeSelected()
+    {
+        EmployeeSelected?.Invoke(this, SelectedEmployee!);
+    }
+
+    public void Activate() => OnActivate();
 
     protected override void OnActivate()
     {
         var db = _ioc.Get<DatabaseContext>();
         Employees = new BindableCollection<Employee>(db.Employees);
+        NotifyOfPropertyChange(() => FilteredEmployees);
     }
 }

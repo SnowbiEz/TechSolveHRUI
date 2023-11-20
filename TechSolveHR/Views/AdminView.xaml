@@ -6,20 +6,19 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
 
-    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    xmlns:modern="http://schemas.modernwpf.com/2019"
-
     xmlns:s="https://github.com/canton7/Stylet"
     xmlns:viewModels="clr-namespace:TechSolveHR.ViewModels"
 
     d:DataContext="{d:DesignInstance Type=viewModels:AdminViewModel}">
     <Grid>
-        <TabControl>
-            <TabItem Header="Hello">
-                <TextBlock>Hello World</TextBlock>
+        <ListView />
+
+        <TabControl SelectedIndex="{Binding SelectedIndex}">
+            <TabItem Header="Select Employee">
+                <ContentControl s:View.Model="{Binding UserListView}" />
             </TabItem>
-            <TabItem Header="Test">
-                <TextBlock>Test World</TextBlock>
+            <TabItem Header="Edit Employee">
+                <ContentControl s:View.Model="{Binding UserInfoView}" />
             </TabItem>
         </TabControl>
     </Grid>

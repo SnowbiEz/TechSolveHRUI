@@ -49,11 +49,11 @@ public class LoginViewModel : Screen
         }
     }
 
-    protected override void OnActivate()
+    protected override async void OnActivate()
     {
         Username = string.Empty;
         Password = string.Empty;
 
-        _main.Logout();
+        await _main.Logout();
     }
 }

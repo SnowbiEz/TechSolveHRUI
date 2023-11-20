@@ -106,9 +106,12 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Margin="0,5" />
+        <Grid Grid.Row="0" Margin="0,5">
+            <TextBox></TextBox>
+        </Grid>
 
         <ListView
+            x:Name="RootListView"
             Grid.Row="1" Margin="0,5"
 
             ItemsSource="{Binding Source={StaticResource CollectionSource}}"
@@ -116,7 +119,7 @@
             VirtualizingPanel.IsVirtualizingWhenGrouping="True"
             VirtualizingPanel.VirtualizationMode="Recycling"
 
-            MouseDoubleClick="{s:Action OnEmployeeSelected}"
+            SelectionChanged="{s:Action OnEmployeeSelected}"
             SelectedItem="{Binding SelectedEmployee}">
             <ListView.GroupStyle>
                 <GroupStyle>

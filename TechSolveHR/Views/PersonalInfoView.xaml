@@ -43,11 +43,11 @@
                                 <GroupBox Header="Full Name">
                                     <modern:SimpleStackPanel Orientation="Horizontal">
                                         <ui:TextBox Icon="BookContacts20" MinWidth="150" PlaceholderText="First"
-                                                    Text="{Binding Employee.Data.FirstName}" />
+                                                    Text="{Binding FirstName}" />
                                         <ui:TextBox MinWidth="150" PlaceholderText="Middle"
-                                                    Text="{Binding Employee.Data.MiddleName}" />
+                                                    Text="{Binding MiddleName}" />
                                         <ui:TextBox MinWidth="150" PlaceholderText="Last"
-                                                    Text="{Binding Employee.Data.LastName}" />
+                                                    Text="{Binding LastName}" />
                                     </modern:SimpleStackPanel>
                                 </GroupBox>
                             </modern:SimpleStackPanel>
@@ -55,7 +55,7 @@
                             <modern:SimpleStackPanel Orientation="Horizontal">
                                 <GroupBox Header="Preferred Name">
                                     <ui:TextBox MinWidth="150" PlaceholderText="(Optional)"
-                                                Text="{Binding Employee.Data.PreferredName}" />
+                                                Text="{Binding PreferredName}" />
                                 </GroupBox>
                             </modern:SimpleStackPanel>
 
@@ -76,7 +76,7 @@
                                 </GroupBox>
                                 <GroupBox Header="Marital Status">
                                     <ui:TextBox PlaceholderText="Marital Status"
-                                                Text="{Binding Employee.Data.MaritalStatus}" />
+                                                Text="{Binding MaritalStatus}" />
                                 </GroupBox>
                             </modern:SimpleStackPanel>
 
@@ -85,12 +85,12 @@
                                     <modern:SimpleStackPanel>
                                         <TextBlock FontSize="11">Mobile</TextBlock>
                                         <ui:TextBox Icon="Phone20" PlaceholderText="Phone #"
-                                                    Text="{Binding Employee.Data.PhoneNumber}" />
+                                                    Text="{Binding PhoneNumber}" />
                                     </modern:SimpleStackPanel>
                                     <modern:SimpleStackPanel>
                                         <TextBlock FontSize="11">Telephone</TextBlock>
                                         <ui:TextBox Icon="Building20" PlaceholderText="Telephone #"
-                                                    Text="{Binding Employee.Data.TelephoneNumber}" />
+                                                    Text="{Binding TelephoneNumber}" />
                                     </modern:SimpleStackPanel>
                                 </modern:SimpleStackPanel>
                             </GroupBox>
@@ -107,7 +107,7 @@
                                         <ui:TextBox Grid.Column="1" Margin="8,0,0,0" Icon="Doctor20"
                                                     PlaceholderText="PhilHealth #"
                                                     HorizontalAlignment="Stretch"
-                                                    Text="{Binding Employee.Data.PhilHealth}" />
+                                                    Text="{Binding PhilHealth}" />
                                     </Grid>
 
                                     <Grid>
@@ -120,7 +120,7 @@
                                         <ui:TextBox Grid.Column="1" Margin="8,0,0,0" Icon="Doctor20"
                                                     PlaceholderText="SSS #"
                                                     HorizontalAlignment="Stretch"
-                                                    Text="{Binding Employee.Data.Sss}" />
+                                                    Text="{Binding Sss}" />
                                     </Grid>
 
                                     <Grid>
@@ -133,7 +133,7 @@
                                         <ui:TextBox Grid.Column="1" Margin="8,0,0,0" Icon="Doctor20"
                                                     PlaceholderText="TIN #"
                                                     HorizontalAlignment="Stretch"
-                                                    Text="{Binding Employee.Data.Tin}" />
+                                                    Text="{Binding Tin}" />
                                     </Grid>
                                 </modern:SimpleStackPanel>
                             </GroupBox>
@@ -145,15 +145,15 @@
                     <ui:Card>
                         <modern:SimpleStackPanel HorizontalAlignment="Left">
                             <ui:TextBox PlaceholderText="Street" MinWidth="300"
-                                        Text="{Binding Employee.Data.Address.Street}" />
+                                        Text="{Binding Street}" />
 
                             <modern:SimpleStackPanel Orientation="Horizontal">
                                 <ui:TextBox PlaceholderText="City" TextWrapping="Wrap"
-                                            Text="{Binding Employee.Data.Address.City}" />
+                                            Text="{Binding City}" />
                                 <ui:TextBox PlaceholderText="State" TextWrapping="Wrap"
-                                            Text="{Binding Employee.Data.Address.State}" />
+                                            Text="{Binding AddressState}" />
                                 <ui:TextBox PlaceholderText="Zip Code" TextWrapping="Wrap"
-                                            Text="{Binding Employee.Data.Address.ZipCode}" />
+                                            Text="{Binding ZipCode}" />
                             </modern:SimpleStackPanel>
                         </modern:SimpleStackPanel>
                     </ui:Card>
@@ -162,9 +162,9 @@
                     <ui:Card>
                         <modern:SimpleStackPanel Orientation="Vertical" HorizontalAlignment="Left">
                             <ui:TextBox MinWidth="320" PlaceholderText="Name"
-                                        Text="{Binding Employee.Contacts.ContactName}" />
-                            <ui:TextBox PlaceholderText="Phone #" Text="{Binding Employee.Contacts.ContactNumber}" />
-                            <ui:TextBox PlaceholderText="Relationship" Text="{Binding Employee.Contacts.Relationship}" />
+                                        Text="{Binding ContactName}" />
+                            <ui:TextBox PlaceholderText="Phone #" Text="{Binding ContactNumber}" />
+                            <ui:TextBox PlaceholderText="Relationship" Text="{Binding Relationship}" />
                         </modern:SimpleStackPanel>
                     </ui:Card>
                 </GroupBox>
