@@ -34,6 +34,8 @@ public class Employee
     public string? EmailAddress { get; set; }
 
     public string? Title { get; set; }
+
+    public string? AccessType { get; set; }
 }
 
 public class Leave

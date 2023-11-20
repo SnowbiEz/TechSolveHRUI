@@ -13,4 +13,6 @@ public class RegistrationViewModel : Screen
         _ioc = ioc;
         _main = main;
     }
+
+    public string AccessType { get; set; } = string.Empty;
 }

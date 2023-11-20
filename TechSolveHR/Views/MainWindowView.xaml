@@ -73,7 +73,7 @@
                     <ui:NavigationSeparator />
 
                     <ui:NavigationItem
-                        Content="Home" Icon="Home12"
+                        Content="Admin" Icon="BookLetter24"
                         PageType="{x:Type pages:HomeView}"
                         Tag="{Binding HomePage}"
                         IsEnabled="{Binding IsLoggedIn}" />

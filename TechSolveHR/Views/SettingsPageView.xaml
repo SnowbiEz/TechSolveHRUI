@@ -12,6 +12,7 @@
     xmlns:theme="clr-namespace:TechSolveHR.ModernWPF.Theme"
     xmlns:transitions="clr-namespace:TechSolveHR.ModernWPF.Animation.Transitions"
     xmlns:viewModels="clr-namespace:TechSolveHR.ViewModels"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
 
     d:DataContext="{d:DesignInstance Type=viewModels:SettingsPageViewModel}">
     <UserControl.Resources>
@@ -20,7 +21,17 @@
 
     <ScrollViewer>
         <modern:SimpleStackPanel Orientation="Vertical">
-            <GroupBox Header="Theme Mode">
+            <GroupBox Header="Change Account Credentials">
+                <modern:SimpleStackPanel Orientation="Vertical" HorizontalAlignment="Left" MinWidth="300">
+                    <ui:TextBox PlaceholderText="Username" Text="{Binding Username}"></ui:TextBox>
+                    <ui:TextBox PlaceholderText="Password"  Text="{Binding Password}"></ui:TextBox>
+                    </modern:SimpleStackPanel>
+            </GroupBox>
+            <modern:SimpleStackPanel Margin="0" Orientation="Horizontal">
+                <ui:Button Width="100" Appearance="Primary">Save</ui:Button>
+                <ui:Button Width="100" Appearance="Secondary">Clear</ui:Button>
+            </modern:SimpleStackPanel>
+            <GroupBox Header="Theme Mode" Margin="0,20,0,0">
                 <modern:RadioButtons
                     SelectedItem="{Binding
                         Source={x:Static modern:ThemeManager.Current}, Path=ApplicationTheme,
@@ -31,13 +42,11 @@
                     </modern:RadioButtons.ItemsSource>
                 </modern:RadioButtons>
             </GroupBox>
-
             <GroupBox Header="Transition style">
                 <ComboBox
                     SelectedItem="{Binding Transition}"
                     ItemsSource="{x:Static transitions:TransitionCollection.Transitions}" />
             </GroupBox>
-
             <GroupBox Header="License">
                 <modern:SimpleStackPanel Margin="10">
                     <TextBlock>

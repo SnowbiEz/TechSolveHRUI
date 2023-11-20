@@ -11,6 +11,7 @@ using TransitionCollection = TechSolveHR.ModernWPF.Animation.Transitions.Transit
 
 namespace TechSolveHR.ViewModels;
 
+
 public class SettingsPageViewModel : Screen
 {
     private readonly IEventAggregator _events;
@@ -30,6 +31,10 @@ public class SettingsPageViewModel : Screen
         TransitionCollection.Transitions[0];
 
     public static Version ProgramVersion => Assembly.GetExecutingAssembly().GetName().Version!;
+
+    public string Password { get; set; } = string.Empty;
+
+    public string Username { get; set; } = string.Empty;
 
     public void OnThemeChanged() => _theme.SetTheme(ThemeManager.Current.ApplicationTheme switch
     {

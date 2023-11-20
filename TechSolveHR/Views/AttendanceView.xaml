@@ -41,6 +41,7 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <modern:SimpleStackPanel Grid.Row="0" Grid.Column="0" Spacing="4">
                         <modern:SimpleStackPanel Orientation="Horizontal">
@@ -61,6 +62,10 @@
                     <modern:SimpleStackPanel Grid.Row="0" Grid.Column="2" Spacing="4">
                         <TextBlock Text="{Binding Length, StringFormat='{}{0:%h} hours, {0:%m} mins'}" />
                         <TextBlock FontSize="8">Length</TextBlock>
+                    </modern:SimpleStackPanel>
+                    <modern:SimpleStackPanel Grid.Row="0" Grid.Column="3" Spacing="4"> <!--Overtime hrs-->
+                        <TextBlock Text="{}"></TextBlock>
+                        <TextBlock FontSize="8">Hrs Overtime</TextBlock>
                     </modern:SimpleStackPanel>
                 </Grid>
             </Grid>
