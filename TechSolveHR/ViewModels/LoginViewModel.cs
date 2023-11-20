@@ -1,11 +1,9 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Stylet;
 using StyletIoC;
 using TechSolveHR.Models;
-using Wpf.Ui.Common;
 using Wpf.Ui.Mvvm.Contracts;
 
 namespace TechSolveHR.ViewModels;
@@ -47,7 +45,15 @@ public class LoginViewModel : Screen
         if (Crypto.VerifyHashedPassword(employee.Password, Password))
         {
             LoginError = false;
-            _events.Publish(new LoggedInEvent(employee));
+            _main.Login(employee);
         }
+    }
+
+    protected override void OnActivate()
+    {
+        Username = string.Empty;
+        Password = string.Empty;
+
+        _main.Logout();
     }
 }

@@ -36,10 +36,8 @@ public class PerformanceViewModel : Screen
 
     public void OnPerformanceSelected() { }
 
-    protected override void OnViewLoaded()
+    protected override void OnActivate()
     {
-        base.OnViewLoaded();
-
         var db = _ioc.Get<DatabaseContext>();
 
         _main.LoggedInUser!.Performances = new List<Performance>

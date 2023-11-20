@@ -14,11 +14,13 @@
 
     d:DataContext="{d:DesignInstance Type=viewModels:AdminViewModel}">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-   
+        <TabControl>
+            <TabItem Header="Hello">
+                <TextBlock>Hello World</TextBlock>
+            </TabItem>
+            <TabItem Header="Test">
+                <TextBlock>Test World</TextBlock>
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>

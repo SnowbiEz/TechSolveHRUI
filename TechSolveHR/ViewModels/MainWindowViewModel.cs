@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Helpers;
 using ModernWpf;
 using Stylet;
@@ -14,8 +15,7 @@ using Wpf.Ui.Mvvm.Contracts;
 
 namespace TechSolveHR.ViewModels;
 
-public class MainWindowViewModel : Conductor<IScreen>,
-    IHandle<LoggedInEvent>, IHandle<LoggedOutEvent>
+public class MainWindowViewModel : Conductor<IScreen>
 {
     public static MainWindowView MainView = null!;
     public static NavigationStore Navigation = null!;
@@ -24,6 +24,7 @@ public class MainWindowViewModel : Conductor<IScreen>,
     private readonly IContainer _ioc;
     private readonly ISnackbarService _snackbar;
     private readonly IThemeService _theme;
+    private Attendance? _attendance;
 
     public MainWindowViewModel(IStyletIoCBuilder builder)
     {
@@ -35,8 +36,6 @@ public class MainWindowViewModel : Conductor<IScreen>,
         _theme    = _ioc.Get<IThemeService>();
         _snackbar = _ioc.Get<ISnackbarService>();
         _dialog   = _ioc.Get<IDialogService>();
-
-        _events.Subscribe(this);
 
         var db = _ioc.Get<DatabaseContext>();
 
@@ -144,9 +143,9 @@ public class MainWindowViewModel : Conductor<IScreen>,
 
     public bool IsAdmin => LoggedInUser is { AccessType: "Admin" };
 
-    public bool IsLoggedOut => LoggedInUser is null;
-
     public bool IsLoggedIn => LoggedInUser is not null;
+
+    public bool IsLoggedOut => LoggedInUser is null;
 
     public Employee? LoggedInUser { get; set; }
 
@@ -164,11 +163,20 @@ public class MainWindowViewModel : Conductor<IScreen>,
 
     public SettingsPageViewModel SettingsPage { get; }
 
+    public string LogText => IsLoggedIn ? "Logout" : "Login";
+
     public string Title { get; set; }
 
-    public void Handle(LoggedInEvent message)
+    public SymbolRegular LogIcon => IsLoggedIn ? SymbolRegular.DoorArrowLeft20 : SymbolRegular.Person12;
+
+    public void Login(Employee employee)
     {
-        LoggedInUser = message.Employee;
+        LoggedInUser = employee;
+
+        employee.Attendances.Add(_attendance = new Attendance
+        {
+            TimeIn = DateTimeOffset.UtcNow
+        });
 
         if (IsAdmin)
             NavigateToItem(AdminPage);
@@ -176,7 +184,19 @@ public class MainWindowViewModel : Conductor<IScreen>,
             NavigateToItem(PersonalInfoPage);
     }
 
-    public void Handle(LoggedOutEvent message) => throw new NotImplementedException();
+    public async Task Logout()
+    {
+        if (LoggedInUser is null || _attendance is null) return;
+
+        _attendance.TimeOut = DateTimeOffset.UtcNow;
+
+        var db = _ioc.Get<DatabaseContext>();
+        db.Employees.Update(LoggedInUser);
+
+        await db.SaveChangesAsync();
+
+        LoggedInUser = null;
+    }
 
     public void Navigate(INavigation sender, RoutedNavigationEventArgs args)
     {
@@ -224,7 +244,3 @@ public class MainWindowViewModel : Conductor<IScreen>,
         Navigation.Navigate(navigationItem.PageType);
     }
 }
-
-public record LoggedOutEvent;
-
-public record LoggedInEvent(Employee Employee);

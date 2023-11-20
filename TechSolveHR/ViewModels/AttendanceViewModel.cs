@@ -23,10 +23,8 @@ public class AttendanceViewModel : Screen
 
     public void OnAttendanceSelected() { }
 
-    protected override void OnViewLoaded()
+    protected override void OnActivate()
     {
-        base.OnViewLoaded();
-
         _main.LoggedInUser!.Attendances = new List<Attendance>
         {
             new()

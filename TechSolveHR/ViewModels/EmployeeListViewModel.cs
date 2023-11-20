@@ -30,10 +30,8 @@ public class EmployeeListViewModel : Screen
 
     public void OnEmployeeSelected() { }
 
-    protected override void OnViewLoaded()
+    protected override void OnActivate()
     {
-        base.OnViewLoaded();
-
         var db = _ioc.Get<DatabaseContext>();
         Employees = new BindableCollection<Employee>(db.Employees);
     }

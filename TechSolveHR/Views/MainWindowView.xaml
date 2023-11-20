@@ -66,10 +66,9 @@
                 Frame="{Binding ElementName=RootFrame, Mode=OneWay}">
                 <ui:NavigationStore.Items>
                     <ui:NavigationItem
-                        Content="Login" Icon="Person12"
+                        Content="{Binding LogText}" Icon="{Binding LogIcon}"
                         PageType="{x:Type pages:LoginView}"
-                        Tag="{Binding LoginPage}"
-                        Visibility="{Binding IsLoggedOut, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        Tag="{Binding LoginPage}" />
 
                     <ui:NavigationSeparator />
 
