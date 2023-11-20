@@ -1,29 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using Humanizer;
+using Humanizer.Localisation;
 
 namespace TechSolveHR.Models;
 
 public class Employee
 {
-    public virtual Department? Department { get; set; }
-
-    public virtual Division? Division { get; set; }
+    public virtual EmergencyContact Contacts { get; set; } = new();
 
     public virtual Employee? Manager { get; set; }
 
-    public Guid? ManagerId { get; set; }
-
     public Guid Id { get; set; }
+
+    public Guid? ManagerId { get; set; }
 
     public virtual List<Attendance> Attendances { get; set; } = new();
 
     public virtual List<Leave> Leaves { get; set; } = new();
 
-    public virtual List<Performance> Performances { get; set; } = new();
-
     public virtual PersonalInformation Data { get; set; } = new();
-
-    public virtual EmergencyContact Contacts { get; set; } = new();
 
     public string Password { get; set; } = null!;
 
@@ -31,13 +27,17 @@ public class Employee
 
     public string Username { get; set; } = null!;
 
+    public string? AccessType { get; set; }
+
     public string? CompanyId { get; set; }
+
+    public string? Department { get; set; }
+
+    public string? Division { get; set; }
 
     public string? EmailAddress { get; set; }
 
     public string? Title { get; set; }
-
-    public string? AccessType { get; set; }
 }
 
 public class Leave
@@ -55,17 +55,23 @@ public class Performance
 {
     public DateTimeOffset DateTime { get; set; }
 
+    public virtual Employee Employee { get; set; } = null!;
+
     public virtual Employee Evaluator { get; set; } = null!;
+
+    public Guid EmployeeId { get; set; }
+
+    public Guid EvaluatorId { get; set; }
 
     public Guid Id { get; set; }
 
-    public string? Title { get; set; }
+    public int? Rating { get; set; }
 
     public string? Category { get; set; }
 
     public string? Feedback { get; set; }
 
-    public int? Rating { get; set; }
+    public string? Title { get; set; }
 }
 
 public class Attendance
@@ -74,9 +80,26 @@ public class Attendance
 
     public DateTimeOffset TimeOut { get; set; }
 
+    public string TimeInString => TimeIn.Humanize();
+
+    public string TimeOutString => TimeOut.Humanize();
+
     public Guid Id { get; set; }
 
+    public string LengthString => Length.Humanize();
+
+    public string OverTimeString => OverTime < TimeSpan.Zero ? "None" : OverTime.Humanize(minUnit: TimeUnit.Minute);
+
     public TimeSpan Length => TimeOut - TimeIn;
+
+    public TimeSpan OverTime
+    {
+        get
+        {
+            var timeSpan = Length.Subtract(TimeSpan.FromHours(8));
+            return timeSpan > TimeSpan.Zero ? timeSpan : TimeSpan.Zero;
+        }
+    }
 }
 
 public class Address
@@ -92,24 +115,6 @@ public class Address
     public string? ZipCode { get; set; }
 }
 
-public class Department
-{
-    public Guid Id { get; set; }
-
-    public virtual List<Employee> Employees { get; set; } = new();
-
-    public string Name { get; set; } = null!;
-}
-
-public class Division
-{
-    public Guid Id { get; set; }
-
-    public virtual List<Employee> Employees { get; set; } = new();
-
-    public string Name { get; set; } = null!;
-}
-
 public class PersonalInformation
 {
     public virtual Address Address { get; set; } = new();
@@ -120,9 +125,9 @@ public class PersonalInformation
 
     public Guid Id { get; set; }
 
-    public string Name => $"{FirstName} {LastName}";
-
     public string FullName => $"{FirstName} {MiddleName} {LastName}";
+
+    public string Name => $"{FirstName} {LastName}";
 
     public string? FirstName { get; set; }
 
@@ -150,7 +155,10 @@ public class PersonalInformation
 public class EmergencyContact
 {
     public Guid Id { get; set; }
+
     public string? ContactName { get; set; }
+
     public string? ContactNumber { get; set; }
+
     public string? Relationship { get; set; }
 }

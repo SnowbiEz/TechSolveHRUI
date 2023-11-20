@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Stylet;
 using StyletIoC;
 using TechSolveHR.Models;
@@ -21,39 +22,12 @@ public class AttendanceViewModel : Screen
 
     public BindableCollection<Attendance> Attendances { get; set; } = new();
 
+    public bool IsEmpty => !Attendances.Any();
+
     public void OnAttendanceSelected() { }
 
     protected override void OnActivate()
     {
-        _main.LoggedInUser!.Attendances = new List<Attendance>
-        {
-            new()
-            {
-                TimeIn  = DateTimeOffset.UtcNow,
-                TimeOut = DateTimeOffset.UtcNow.AddHours(8)
-            },
-            new()
-            {
-                TimeIn  = DateTimeOffset.UtcNow.AddMinutes(Random.Shared.Next(120)),
-                TimeOut = DateTimeOffset.UtcNow.AddHours(8).AddMinutes(Random.Shared.Next(120))
-            },
-            new()
-            {
-                TimeIn  = DateTimeOffset.UtcNow.AddMinutes(Random.Shared.Next(120)),
-                TimeOut = DateTimeOffset.UtcNow.AddHours(8).AddMinutes(Random.Shared.Next(120))
-            },
-            new()
-            {
-                TimeIn  = DateTimeOffset.UtcNow.AddMinutes(Random.Shared.Next(120)),
-                TimeOut = DateTimeOffset.UtcNow.AddHours(8).AddMinutes(Random.Shared.Next(120))
-            },
-            new()
-            {
-                TimeIn  = DateTimeOffset.UtcNow.AddMinutes(Random.Shared.Next(120)),
-                TimeOut = DateTimeOffset.UtcNow.AddHours(8).AddMinutes(Random.Shared.Next(120))
-            }
-        };
-
         Attendances = new BindableCollection<Attendance>(_main.LoggedInUser!.Attendances);
     }
 }

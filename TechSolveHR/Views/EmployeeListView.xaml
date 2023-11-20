@@ -41,6 +41,7 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <modern:SimpleStackPanel Grid.Column="0" MinWidth="200" VerticalAlignment="Center">
@@ -60,7 +61,8 @@
                         </TextBlock>
                     </modern:SimpleStackPanel>
 
-                    <modern:SimpleStackPanel Grid.Column="1" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <modern:SimpleStackPanel Grid.Column="1" MinWidth="150" HorizontalAlignment="Center"
+                                             VerticalAlignment="Center">
 
                         <modern:SimpleStackPanel.Resources>
                             <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
@@ -84,7 +86,8 @@
                         </modern:SimpleStackPanel>
                     </modern:SimpleStackPanel>
 
-                    <modern:SimpleStackPanel Grid.Column="2" MinWidth="200" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <modern:SimpleStackPanel Grid.Column="2" MinWidth="200" HorizontalAlignment="Center"
+                                             VerticalAlignment="Center">
                         <modern:SimpleStackPanel Orientation="Horizontal">
                             <ui:SymbolIcon Symbol="PersonMail20" />
                             <TextBlock>
@@ -94,6 +97,14 @@
                             </TextBlock>
                         </modern:SimpleStackPanel>
                     </modern:SimpleStackPanel>
+
+                    <ui:Button
+                        Grid.Column="3" Icon="Delete16" IconFilled="True" FontSize="14"
+                        Background="Transparent" BorderBrush="Transparent"
+                        Visibility="{Binding DataContext.ShowDeleteButton,
+                            RelativeSource={RelativeSource AncestorType={x:Type UserControl}},
+                            Converter={StaticResource BooleanToVisibilityConverter}}"
+                        Command="{s:Action DeleteEmployee}" CommandParameter="{Binding}" />
                 </Grid>
             </Grid>
         </DataTemplate>
@@ -107,8 +118,16 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Margin="0,5">
-            <TextBox></TextBox>
+            <ui:AutoSuggestBox
+                MinWidth="200" MaxWidth="250" HorizontalAlignment="Left" PlaceholderText="Search..."
+                ItemsSource="{Binding EmployeeNames}"
+                Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}" />
         </Grid>
+
+        <ui:InfoBar
+            Grid.Row="1" IsClosable="False" Severity="Informational"
+            Message="There's nothing here to see... yet"
+            VerticalAlignment="Top" IsOpen="{Binding IsEmpty}" />
 
         <ListView
             x:Name="RootListView"

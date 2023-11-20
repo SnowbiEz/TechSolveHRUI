@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Helpers;
+using System.Windows.Media;
+using Humanizer;
 using ModernWpf;
 using Stylet;
 using StyletIoC;
@@ -44,19 +46,13 @@ public class MainWindowViewModel : Conductor<IScreen>
             var employee1 = new Employee
             {
                 AccessType = "Admin",
-                Username  = "charlie",
-                Password  = Crypto.HashPassword("password"),
-                CompanyId = "1",
-                Status    = "Active",
-                Department = new Department
-                {
-                    Name = "Human Resources"
-                },
-                Division = new Division
-                {
-                    Name = "Tech Solve"
-                },
-                Title = "HR Manager",
+                Username   = "charlie",
+                Password   = Crypto.HashPassword("password"),
+                CompanyId  = "1",
+                Status     = "Active",
+                Department = "Human Resources",
+                Division   = "Tech Solve",
+                Title      = "HR Manager",
                 Data = new PersonalInformation
                 {
                     FirstName     = "Charlotte",
@@ -84,20 +80,14 @@ public class MainWindowViewModel : Conductor<IScreen>
 
             var employee2 = new Employee
             {
-                Username  = "manager",
-                Password  = Crypto.HashPassword("password"),
-                Manager   = employee1,
-                CompanyId = "2",
-                Status    = "Active",
-                Department = new Department
-                {
-                    Name = "Human Resources"
-                },
-                Division = new Division
-                {
-                    Name = "Tech Solve"
-                },
-                Title = "Manager",
+                Username   = "manager",
+                Password   = Crypto.HashPassword("password"),
+                Manager    = employee1,
+                CompanyId  = "2",
+                Status     = "Active",
+                Department = "Human Resources",
+                Division   = "Tech Solve",
+                Title      = "Manager",
                 Data = new PersonalInformation
                 {
                     FirstName     = "John",
@@ -128,6 +118,7 @@ public class MainWindowViewModel : Conductor<IScreen>
             db.SaveChanges();
         }
 
+        HomePage         = _ioc.Get<HomeViewModel>();
         SettingsPage     = _ioc.Get<SettingsPageViewModel>();
         LoginPage        = _ioc.Get<LoginViewModel>();
         AdminPage        = _ioc.Get<AdminViewModel>();
@@ -152,6 +143,8 @@ public class MainWindowViewModel : Conductor<IScreen>
 
     public EmployeeListViewModel EmployeeListPage { get; }
 
+    public HomeViewModel HomePage { get; }
+
     public LoginViewModel LoginPage { get; }
 
     public PerformanceViewModel PerformancePage { get; }
@@ -170,31 +163,39 @@ public class MainWindowViewModel : Conductor<IScreen>
 
     public SymbolRegular LogIcon => IsLoggedIn ? SymbolRegular.DoorArrowLeft20 : SymbolRegular.Person12;
 
-    public void Login(Employee employee)
-    {
-        LoggedInUser = employee;
-
-        employee.Attendances.Add(_attendance = new Attendance
-        {
-            TimeIn = DateTimeOffset.UtcNow
-        });
-
-        
-        NavigateToItem(PersonalInfoPage);
-    }
-
     public async Task Logout()
     {
         if (LoggedInUser is null || _attendance is null) return;
 
         _attendance.TimeOut = DateTimeOffset.UtcNow;
 
-        var db = _ioc.Get<DatabaseContext>();
-        db.Employees.Update(LoggedInUser);
+        await using var db = _ioc.Get<DatabaseContext>();
+        var user = await db.Employees.FindAsync(LoggedInUser.Id);
+        if (user is not null)
+        {
+            user.Attendances.Add(_attendance);
+            await db.SaveChangesAsync();
+        }
 
-        await db.SaveChangesAsync();
+        await _snackbar.ShowAsync("Goodbye", $"You have logged out. Today you worked for {_attendance.Length.Humanize()}.",
+            SymbolRegular.WeatherMoon20, ControlAppearance.Secondary);
 
         LoggedInUser = null;
+    }
+
+    public async Task Login(Employee employee)
+    {
+        LoggedInUser = employee;
+
+        _attendance = new Attendance
+        {
+            TimeIn = DateTimeOffset.UtcNow
+        };
+
+        NavigateToItem(HomePage);
+        await _snackbar.ShowAsync("Welcome!", $"You have successfully logged in as {LoggedInUser.Data.Name}.",
+            SymbolRegular.WeatherSunny20, ControlAppearance.Primary);
+      
     }
 
     public void Navigate(INavigation sender, RoutedNavigationEventArgs args)
@@ -203,7 +204,24 @@ public class MainWindowViewModel : Conductor<IScreen>
             ActivateItem(viewModel);
     }
 
-    public void NavigateToSettings() => ActivateItem(SettingsPage);
+    public void NavigateToItem(IScreen view)
+    {
+        if (view == SettingsPage)
+        {
+            NavigateToSettings();
+            return;
+        }
+
+        var navigationItem = Navigation.Items.OfType<NavigationItem>().First(x => x.Tag == view);
+        Navigation.SelectedPageIndex = Navigation.Items.IndexOf(navigationItem);
+        Navigation.Navigate(navigationItem.PageType);
+    }
+
+    public void NavigateToSettings()
+    {
+        ActivateItem(SettingsPage);
+        Navigation.Navigate(typeof(SettingsPageView));
+    }
 
     public void ToggleTheme()
     {
@@ -227,19 +245,12 @@ public class MainWindowViewModel : Conductor<IScreen>
 
         NavigateToItem(FirstPage);
 
-        MainView.RootSnackBar.Timeout = (int) TimeSpan.FromSeconds(2).TotalMilliseconds;
+        MainView.RootSnackBar.Timeout = (int) TimeSpan.FromSeconds(3).TotalMilliseconds;
+
         _snackbar.SetSnackbarControl(MainView.RootSnackBar);
         _dialog.SetDialogControl(MainView.RootContentDialog);
 
         await _snackbar.ShowAsync("Welcome!", "Welcome to Tech Solve HR System",
             SymbolRegular.RibbonStar24, ControlAppearance.Primary);
-    }
-
-    private void NavigateToItem(IScreen viewModel)
-    {
-        var navigationItem
-            = (NavigationItem) Navigation.Items.First(x => x is NavigationItem item && item.Tag == viewModel);
-        Navigation.SelectedPageIndex = Navigation.Items.IndexOf(navigationItem);
-        Navigation.Navigate(navigationItem.PageType);
     }
 }

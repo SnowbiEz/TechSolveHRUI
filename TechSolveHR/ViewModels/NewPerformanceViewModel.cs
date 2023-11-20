@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Stylet;
 using StyletIoC;
@@ -28,16 +29,22 @@ public class NewPerformanceViewModel : Screen
 
     public Employee? SelectedEmployee { get; set; }
 
-    public Performance Performance { get; set; } = new() { Rating = 3 };
+    public Performance Performance { get; set; } = new()
+    {
+        DateTime = DateTimeOffset.UtcNow,
+        Rating   = 3
+    };
 
     public async Task CreateNewPerformance()
     {
-        if (SelectedEmployee is null) return;
+        if (SelectedEmployee is null || _main.LoggedInUser is null) return;
 
-        var db = _ioc.Get<DatabaseContext>();
-        SelectedEmployee.Performances.Add(Performance);
-        db.Employees.Update(SelectedEmployee);
+        await using var db = _ioc.Get<DatabaseContext>();
 
+        Performance.EmployeeId  = SelectedEmployee.Id;
+        Performance.EvaluatorId = _main.LoggedInUser.Id;
+
+        db.Performances.Add(Performance);
         await db.SaveChangesAsync();
 
         var service = _ioc.Get<ISnackbarService>();

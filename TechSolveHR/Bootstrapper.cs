@@ -45,7 +45,7 @@ public class Bootstrapper : Bootstrapper<MainWindowViewModel>
 
         builder.Bind<DatabaseContext>().ToFactory(_ =>
         {
-            var source = Path.Combine(path!, "data.db");
+            var source = Path.Combine(path!, "hr_data.db");
 
             var options = new DbContextOptionsBuilder<DatabaseContext>()
                 .UseLazyLoadingProxies()

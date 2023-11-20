@@ -6,8 +6,8 @@ namespace TechSolveHR.ViewModels;
 
 public class AdminViewModel : Screen
 {
-    private readonly DatabaseContext _db;
     private readonly IContainer _ioc;
+    private readonly DatabaseContext _db;
     private readonly MainWindowViewModel _main;
     private bool _initialized;
 
@@ -21,6 +21,7 @@ public class AdminViewModel : Screen
         UserListView = _ioc.Get<EmployeeListViewModel>();
 
         UserListView.EmployeeSelected += (_, _) => OnEmployeeSelected();
+        UserListView.ShowDeleteButton =  true;
     }
 
     public Employee SelectedEmployee
@@ -29,21 +30,23 @@ public class AdminViewModel : Screen
         set => UserListView.SelectedEmployee = value;
     }
 
-    public PersonalInfoViewModel UserInfoView { get; }
     public EmployeeListViewModel UserListView { get; }
+
     public int SelectedIndex { get; set; }
+
+    public PersonalInfoViewModel UserInfoView { get; }
+
+    protected override void OnActivate()
+    {
+        UserListView.Activate();
+        UserInfoView.Activate();
+    }
 
     private void OnEmployeeSelected()
     {
         UserInfoView.Employee = SelectedEmployee;
         SelectedIndex         = 1;
 
-        UserInfoView.Activate();
-    }
-
-    protected override void OnActivate()
-    {
-        UserListView.Activate();
         UserInfoView.Activate();
     }
 }

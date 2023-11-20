@@ -12,12 +12,16 @@
     xmlns:viewModels="clr-namespace:TechSolveHR.ViewModels"
     xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     xmlns:models="clr-namespace:TechSolveHR.Models"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:modernWpf="clr-namespace:TechSolveHR.ModernWPF"
 
     d:DataContext="{d:DesignInstance Type=viewModels:PerformanceViewModel}">
     <UserControl.Resources>
+        <modernWpf:DateTimeGroupKeyconverter x:Key="DateTimeGroupKeyConverter" />
         <CollectionViewSource x:Key="CollectionSource" Source="{Binding FilteredPerformance}">
             <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="Evaluator.Data.FirstName" />
+                <PropertyGroupDescription PropertyName="DateTime"
+                                          Converter="{StaticResource DateTimeGroupKeyConverter}" />
             </CollectionViewSource.GroupDescriptions>
             <CollectionViewSource.SortDescriptions>
                 <componentModel:SortDescription PropertyName="DateTime" />
@@ -25,44 +29,29 @@
         </CollectionViewSource>
 
         <DataTemplate x:Key="ListViewTemplate" DataType="{x:Type models:Performance}">
-            <Grid Margin="8">
+            <Grid Margin="8" HorizontalAlignment="Left">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="4*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="2*" />
-                </Grid.ColumnDefinitions>
-
-                <modern:SimpleStackPanel Grid.Column="0" VerticalAlignment="Center">
+                <modern:SimpleStackPanel Grid.Row="0">
+                    <ui:Rating Value="{Binding Rating}" FontSize="11" HorizontalAlignment="Left" />
                     <TextBlock Text="{Binding DateTime, StringFormat='{}{0:dd/MM/yyyy}'}" />
                 </modern:SimpleStackPanel>
 
-                <modern:SimpleStackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding Title}" />
+                <modern:SimpleStackPanel Grid.Row="1" Margin="0,16">
+                    <TextBlock Text="{Binding Title}" FontSize="16" FontWeight="Bold" TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding Category}" FontSize="11" TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding Feedback}" Margin="0,16" TextWrapping="Wrap" />
                 </modern:SimpleStackPanel>
 
-                <modern:SimpleStackPanel Grid.Column="2" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding Feedback}" />
-                </modern:SimpleStackPanel>
-
-                <modern:SimpleStackPanel Grid.Column="3" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding Category}" />
-                </modern:SimpleStackPanel>
-
-                <modern:SimpleStackPanel Grid.Column="4" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding Rating}" />
-                </modern:SimpleStackPanel>
-
-                <modern:SimpleStackPanel Grid.Column="5" VerticalAlignment="Center">
-                    <TextBlock FontWeight="Bold">
-                        <Run Text="{Binding Evaluator.Data.FirstName}" />
-                        <Run Text="{Binding Evaluator.Data.LastName}" />
+                <modern:SimpleStackPanel Grid.Row="2" VerticalAlignment="Center">
+                    <TextBlock TextWrapping="Wrap" MaxWidth="200" HorizontalAlignment="Left">
+                        Evaluated by
+                        <Run Text="{Binding Evaluator.Data.FirstName}" FontWeight="Bold" />
+                        <Run Text="{Binding Evaluator.Data.LastName}" FontWeight="Bold" />
                     </TextBlock>
                 </modern:SimpleStackPanel>
             </Grid>
@@ -71,51 +60,29 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Margin="16,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="4*" />
-                <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="2*" />
-            </Grid.ColumnDefinitions>
-
-            <modern:SimpleStackPanel Grid.Column="0" VerticalAlignment="Center">
-                <TextBlock>Date</TextBlock>
-            </modern:SimpleStackPanel>
-            <modern:SimpleStackPanel Grid.Column="1" VerticalAlignment="Center">
-                <TextBlock>Title</TextBlock>
-            </modern:SimpleStackPanel>
-            <modern:SimpleStackPanel Grid.Column="2" VerticalAlignment="Center">
-                <TextBlock>Feedback</TextBlock>
-            </modern:SimpleStackPanel>
-            <modern:SimpleStackPanel Grid.Column="3" VerticalAlignment="Center">
-                <TextBlock>Category</TextBlock>
-            </modern:SimpleStackPanel>
-            <modern:SimpleStackPanel Grid.Column="4" VerticalAlignment="Center">
-                <TextBlock>Rating</TextBlock>
-            </modern:SimpleStackPanel>
-            <modern:SimpleStackPanel Grid.Column="5" VerticalAlignment="Center">
-                <TextBlock>Evaluator</TextBlock>
-            </modern:SimpleStackPanel>
-        </Grid>
+        <ui:InfoBar
+            Grid.Row="0" IsClosable="False" Severity="Informational"
+            Message="There's nothing here to see... yet"
+            VerticalAlignment="Top" IsOpen="{Binding IsEmpty}" />
 
         <ListView
-            Grid.Row="1" Margin="0,5"
+            Grid.Row="0"
 
             ItemsSource="{Binding Source={StaticResource CollectionSource}}"
             ItemTemplate="{StaticResource ListViewTemplate}"
+
             VirtualizingPanel.IsVirtualizingWhenGrouping="True"
             VirtualizingPanel.VirtualizationMode="Recycling"
 
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+
             MouseDoubleClick="{s:Action OnPerformanceSelected}"
             SelectedItem="{Binding SelectedPerformance}">
+
             <ListView.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>
@@ -127,12 +94,18 @@
                     </GroupStyle.HeaderTemplate>
                 </GroupStyle>
             </ListView.GroupStyle>
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                    <Setter Property="Margin" Value="8" />
+                </Style>
+            </ListView.ItemContainerStyle>
+
         </ListView>
 
-        <modern:SimpleStackPanel
-            Grid.Row="2" Orientation="Horizontal"
-            HorizontalAlignment="Center">
-            <Button Command="{s:Action CreateNewPerformance}">Create performance review</Button>
-        </modern:SimpleStackPanel>
+        <ui:CardAction Grid.Row="1" Command="{s:Action CreateNewPerformance}"
+                       Visibility="{Binding HasEmployees, Converter={StaticResource BooleanToVisibilityConverter}}">
+            Create performance review
+        </ui:CardAction>
     </Grid>
 </UserControl>

@@ -17,10 +17,10 @@
 
     d:DataContext="{d:DesignInstance Type=viewModels:AttendanceViewModel}">
     <UserControl.Resources>
-        <modernWpf:DateTimeGroupKeyconverter x:Key="DateTimeGroupKeyconverter" />
+        <modernWpf:DateTimeGroupKeyconverter x:Key="DateTimeGroupKeyConverter" />
         <CollectionViewSource x:Key="CollectionSource" Source="{Binding Attendances}">
             <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="TimeIn" Converter="{StaticResource DateTimeGroupKeyconverter}" />
+                <PropertyGroupDescription PropertyName="TimeIn" Converter="{StaticResource DateTimeGroupKeyConverter}" />
             </CollectionViewSource.GroupDescriptions>
             <CollectionViewSource.SortDescriptions>
                 <componentModel:SortDescription PropertyName="TimeIn" />
@@ -30,59 +30,63 @@
         <DataTemplate x:Key="ListViewTemplate" DataType="{x:Type models:Attendance}">
             <Grid Margin="8">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="16" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <ui:SymbolIcon Symbol="PersonCircle24" FontSize="50" />
+                <modern:SimpleStackPanel Grid.Row="0" Grid.Column="0" Spacing="4">
+                    <modern:SimpleStackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="DoorArrowLeft16" />
+                        <TextBlock Text="{Binding TimeIn, StringFormat='{}{0:dddd, MMM dd, hh:mm}'}" />
+                    </modern:SimpleStackPanel>
+                    <TextBlock FontSize="8" Foreground="{DynamicResource TextFillColorTertiaryBrush}">
+                        Time In -
+                        <Run Text="{Binding TimeInString, Mode=OneWay}" />
+                    </TextBlock>
+                </modern:SimpleStackPanel>
 
-                <Grid Column="1" Margin="16,0,0,0" VerticalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <modern:SimpleStackPanel Grid.Row="0" Grid.Column="0" Spacing="4">
-                        <modern:SimpleStackPanel Orientation="Horizontal">
-                            <ui:SymbolIcon Symbol="DoorArrowLeft16" />
-                            <TextBlock Text="{Binding TimeIn, StringFormat='{}{0:dddd, MMM dd, hh:mm}'}" />
-                        </modern:SimpleStackPanel>
-                        <TextBlock FontSize="8">Time In</TextBlock>
+                <modern:SimpleStackPanel Grid.Row="0" Grid.Column="2" Spacing="4">
+                    <modern:SimpleStackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="DoorArrowRight16" />
+                        <TextBlock Text="{Binding TimeOut, StringFormat='{}{0:dddd, MMM dd, hh:mm}'}" />
                     </modern:SimpleStackPanel>
+                    <TextBlock FontSize="8" Foreground="{DynamicResource TextFillColorTertiaryBrush}">
+                        Time Out -
+                        <Run Text="{Binding TimeOutString, Mode=OneWay}" />
+                    </TextBlock>
+                </modern:SimpleStackPanel>
 
-                    <modern:SimpleStackPanel Grid.Row="0" Grid.Column="1" Spacing="4">
-                        <modern:SimpleStackPanel Orientation="Horizontal">
-                            <ui:SymbolIcon Symbol="DoorArrowRight16" />
-                            <TextBlock Text="{Binding TimeOut, StringFormat='{}{0:dddd, MMM dd, hh:mm}'}" />
-                        </modern:SimpleStackPanel>
-                        <TextBlock FontSize="8">Time Out</TextBlock>
-                    </modern:SimpleStackPanel>
+                <modern:SimpleStackPanel Grid.Row="0" Grid.Column="4" Spacing="4">
+                    <TextBlock Text="{Binding LengthString}" />
+                    <TextBlock FontSize="8" Foreground="{DynamicResource TextFillColorTertiaryBrush}">Length</TextBlock>
+                </modern:SimpleStackPanel>
 
-                    <modern:SimpleStackPanel Grid.Row="0" Grid.Column="2" Spacing="4">
-                        <TextBlock Text="{Binding Length, StringFormat='{}{0:%h} hours, {0:%m} mins'}" />
-                        <TextBlock FontSize="8">Length</TextBlock>
-                    </modern:SimpleStackPanel>
-                    <modern:SimpleStackPanel Grid.Row="0" Grid.Column="3" Spacing="4"> <!--Overtime hrs-->
-                        <TextBlock Text="{}"></TextBlock>
-                        <TextBlock FontSize="8">Hrs Overtime</TextBlock>
-                    </modern:SimpleStackPanel>
-                </Grid>
+                <modern:SimpleStackPanel Grid.Row="0" Grid.Column="6" Spacing="4">
+                    <TextBlock Text="{Binding OverTimeString}" />
+                    <TextBlock FontSize="8" Foreground="{DynamicResource TextFillColorTertiaryBrush}">Overtime</TextBlock>
+                </modern:SimpleStackPanel>
             </Grid>
         </DataTemplate>
     </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Margin="0,5" />
+        <ui:InfoBar
+            Grid.Row="0" IsClosable="False" Severity="Informational"
+            Message="There's nothing here to see... yet"
+            VerticalAlignment="Top" IsOpen="{Binding IsEmpty}" />
 
         <ListView
-            Grid.Row="1" Margin="0,5"
+            Grid.Row="0" Margin="0,5"
 
             ItemsSource="{Binding Source={StaticResource CollectionSource}}"
             ItemTemplate="{StaticResource ListViewTemplate}"
@@ -105,7 +109,8 @@
         </ListView>
 
         <modern:SimpleStackPanel
-            Grid.Row="2" Orientation="Horizontal"
+            Grid.Row="1" Orientation="Horizontal"
             HorizontalAlignment="Center" />
+
     </Grid>
 </UserControl>

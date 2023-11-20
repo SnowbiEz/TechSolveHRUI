@@ -21,16 +21,18 @@
 
     <ScrollViewer>
         <modern:SimpleStackPanel Orientation="Vertical">
-            <GroupBox Header="Change Account Credentials">
+            <GroupBox Header="Change Account Credentials" Visibility="{Binding CanChangeCredentials, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <modern:SimpleStackPanel Orientation="Vertical" HorizontalAlignment="Left" MinWidth="300">
-                    <ui:TextBox PlaceholderText="Username" Text="{Binding Username}"></ui:TextBox>
-                    <ui:TextBox PlaceholderText="Password"  Text="{Binding Password}"></ui:TextBox>
+                    <ui:TextBox Icon="Person12" PlaceholderText="Username" Text="{Binding Username}" />
+                    <ui:PasswordBox Icon="Password16" PlaceholderText="Password" Text="{Binding Password, Mode=TwoWay}" />
+
+                    <modern:SimpleStackPanel Orientation="Horizontal">
+                        <ui:Button Width="100" Appearance="Primary" Command="{s:Action Save}">Save</ui:Button>
+                        <ui:Button Width="100" Appearance="Secondary" Command="{s:Action Clear}">Clear</ui:Button>
                     </modern:SimpleStackPanel>
+                </modern:SimpleStackPanel>
             </GroupBox>
-            <modern:SimpleStackPanel Margin="0" Orientation="Horizontal">
-                <ui:Button Width="100" Appearance="Primary">Save</ui:Button>
-                <ui:Button Width="100" Appearance="Secondary">Clear</ui:Button>
-            </modern:SimpleStackPanel>
+            
             <GroupBox Header="Theme Mode" Margin="0,20,0,0">
                 <modern:RadioButtons
                     SelectedItem="{Binding

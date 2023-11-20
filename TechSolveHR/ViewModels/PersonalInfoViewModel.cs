@@ -82,6 +82,12 @@ public class PersonalInfoViewModel : Screen
         set => Employee.Data.PhoneNumber = value;
     }
 
+    public string EmailAddress
+    {
+        get => Employee.EmailAddress ?? string.Empty;
+        set => Employee.EmailAddress = value;
+    }
+
     public string TelephoneNumber
     {
         get => Employee.Data.TelephoneNumber ?? string.Empty;
@@ -171,7 +177,8 @@ public class PersonalInfoViewModel : Screen
 
     public async Task Save()
     {
-        var db = _ioc.Get<DatabaseContext>();
+        await using var db = _ioc.Get<DatabaseContext>();
+
         db.Employees.Update(Employee);
         await db.SaveChangesAsync();
 

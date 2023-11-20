@@ -1,6 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Stylet;
 using StyletIoC;
 using TechSolveHR.Models;
@@ -20,13 +19,18 @@ public class PerformanceViewModel : Screen
 
     public BindableCollection<Performance> FilteredPerformance =>
         string.IsNullOrWhiteSpace(FilterText)
-            ? Performance
-            : new BindableCollection<Performance>(Performance
+            ? Performances
+            : new BindableCollection<Performance>(Performances
                 .Where(x
                     => (x.Title != null && x.Title.Contains(FilterText))
                     || (x.Feedback != null && x.Feedback.Contains(FilterText))));
 
-    public BindableCollection<Performance> Performance { get; set; } = new();
+    public BindableCollection<Performance> Performances { get; set; } = new();
+
+    public bool HasEmployees => _ioc.Get<DatabaseContext>().Employees
+        .Any(x => _main.LoggedInUser != null && x.ManagerId == _main.LoggedInUser.Id);
+
+    public bool IsEmpty => !Performances.Any();
 
     public Performance? SelectedPerformance { get; set; }
 
@@ -36,41 +40,15 @@ public class PerformanceViewModel : Screen
 
     public void OnPerformanceSelected() { }
 
-    protected override void OnActivate()
+    protected override async void OnActivate()
     {
-        var db = _ioc.Get<DatabaseContext>();
+        if (_main.LoggedInUser is null) return;
 
-        _main.LoggedInUser!.Performances = new List<Performance>
-        {
-            new()
-            {
-                Category  = "Category 1",
-                Title     = "Title 1",
-                Feedback  = "Feedback 1",
-                Rating    = 1,
-                Evaluator = db.Employees.First(),
-                DateTime  = DateTimeOffset.UtcNow
-            },
-            new()
-            {
-                Category  = "Category 2",
-                Title     = "Title 2",
-                Feedback  = "Feedback 2",
-                Rating    = 2,
-                Evaluator = db.Employees.First(),
-                DateTime  = DateTimeOffset.UtcNow
-            },
-            new()
-            {
-                Category  = "Category 3",
-                Title     = "Title 3",
-                Feedback  = "Feedback 3",
-                Rating    = 3,
-                Evaluator = db.Employees.First(),
-                DateTime  = DateTimeOffset.UtcNow
-            }
-        };
+        await using var db = _ioc.Get<DatabaseContext>();
+        var performances = db.Performances
+            .Include(x => x.Evaluator).ThenInclude(x => x.Data)
+            .Where(x => x.Employee.Id == _main.LoggedInUser.Id);
 
-        Performance = new BindableCollection<Performance>(_main.LoggedInUser!.Performances);
+        Performances = new BindableCollection<Performance>(performances);
     }
 }

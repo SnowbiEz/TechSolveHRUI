@@ -14,7 +14,7 @@
 
     d:DataContext="{d:DesignInstance Type=viewModels:RegistrationViewModel}">
     <GroupBox Header="New Account" HorizontalAlignment="Center">
-        <modern:SimpleStackPanel Width="300">
+        <modern:SimpleStackPanel>
             <GroupBox Header="Select Manager">
                 <ComboBox
                     ItemsSource="{Binding Employees}" SelectedItem="{Binding SelectedManager}"
@@ -27,11 +27,27 @@
                     <ComboBoxItem>Employee</ComboBoxItem>
                 </ComboBox>
             </GroupBox>
+
+            <ui:TextBox Icon="Briefcase20" MinWidth="150" PlaceholderText="Title"
+                        Text="{Binding Title}" />
+
+            <GroupBox Header="Full Name">
+                <modern:SimpleStackPanel Orientation="Horizontal">
+                    <ui:TextBox Icon="BookContacts20" MinWidth="150" PlaceholderText="First"
+                                Text="{Binding FirstName}" />
+                    <ui:TextBox MinWidth="150" PlaceholderText="Middle"
+                                Text="{Binding MiddleName}" />
+                    <ui:TextBox MinWidth="150" PlaceholderText="Last"
+                                Text="{Binding LastName}" />
+                </modern:SimpleStackPanel>
+            </GroupBox>
+
+            <ui:TextBox Icon="Mail20" PlaceholderText="Email" Text="{Binding Email, Mode=OneWayToSource}" />
             <ui:TextBox Icon="Person12" PlaceholderText="Username" Text="{Binding Username, Mode=OneWayToSource}" />
             <ui:PasswordBox
                 Icon="Password16" PlaceholderText="Password"
                 Password="{Binding Password, Mode=TwoWay}" />
-            <ui:Button Appearance="Primary" Command="{s:Action Register}" HorizontalAlignment="Center">Register</ui:Button>
+            <ui:Button Appearance="Primary" Command="{s:Action Register}" HorizontalAlignment="Right">Register</ui:Button>
         </modern:SimpleStackPanel>
     </GroupBox>
 </UserControl>
