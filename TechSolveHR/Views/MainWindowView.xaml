@@ -15,7 +15,7 @@
 
     d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
 
-    Title="{Binding Title}" Height="850" Width="1200" MinWidth="435"
+    Title="{Binding Title}" Height="850" Width="600" MinWidth="600"
     Background="{ui:ThemeResource ApplicationBackgroundBrush}" ExtendsContentIntoTitleBar="True"
     WindowBackdropType="Mica" WindowCornerPreference="Round" WindowStartupLocation="CenterScreen">
     <Grid>
@@ -62,7 +62,7 @@
 
             <ui:NavigationStore
                 x:Name="RootNavigation" Margin="6,0" Precache="False"
-                Navigated="{s:Action Navigate}"
+                Navigated="{s:Action Navigate}" Padding="6,0"
                 Frame="{Binding ElementName=RootFrame, Mode=OneWay}">
                 <ui:NavigationStore.Items>
                     <ui:NavigationItem
@@ -70,13 +70,18 @@
                         PageType="{x:Type pages:LoginView}"
                         Tag="{Binding LoginPage}" />
 
+                    <ui:NavigationItem
+                        Content="Register" Icon="ClipboardBulletListLtr20"
+                        PageType="{x:Type pages:RegistrationView}"
+                        Tag="{Binding RegistrationPage}" />
+
                     <ui:NavigationSeparator />
 
                     <ui:NavigationItem
                         Content="Admin" Icon="BookLetter24"
-                        PageType="{x:Type pages:HomeView}"
-                        Tag="{Binding HomePage}"
-                        IsEnabled="{Binding IsLoggedIn}" />
+                        PageType="{x:Type pages:AdminView}"
+                        Tag="{Binding AdminPage}"
+                        IsEnabled="{Binding IsAdmin}" />
 
                     <ui:NavigationItem
                         Content="Info" Icon="PersonInfo16"
@@ -90,20 +95,21 @@
                         Tag="{Binding EmployeeListPage}"
                         IsEnabled="{Binding IsLoggedIn}" />
 
-                    <ui:NavigationItem
-                        Content="Register" Icon="ClipboardBulletListLtr20"
-                        PageType="{x:Type pages:RegistrationView}"
-                        Tag="{Binding RegistrationPage}"
-                        IsEnabled="{Binding IsLoggedIn}"/>
 
                     <ui:NavigationItem
                         Content="Attendance" Icon="CalendarRtl12"
                         PageType="{x:Type pages:AttendanceView}"
                         Tag="{Binding AttendancePage}"
-                        IsEnabled="{Binding IsLoggedIn}"/>
-                    <ui:NavigationSeparator />
+                        IsEnabled="{Binding IsLoggedIn}" />
+
+                    <ui:NavigationItem
+                        Content="Performance" Icon="NotepadPerson20"
+                        PageType="{x:Type pages:PerformanceView}"
+                        Tag="{Binding PerformancePage}"
+                        IsEnabled="{Binding IsLoggedIn}" />
 
                 </ui:NavigationStore.Items>
+
                 <ui:NavigationStore.Footer>
                     <ui:NavigationItem Content="Theme" Icon="DarkTheme24" Command="{s:Action ToggleTheme}" />
                     <ui:NavigationItem Content="Settings" Icon="Settings16"
@@ -121,14 +127,20 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
+
+                    <Frame Grid.Row="0" x:Name="RootFrame" Visibility="Visible" />
+
                     <ui:Breadcrumb
                         Grid.Row="0" Margin="18"
                         HorizontalAlignment="Left" VerticalAlignment="Top"
                         FontSize="24" Navigation="{Binding ElementName=RootNavigation, Mode=OneWay}" />
-                    <Frame Grid.Row="0" x:Name="RootFrame" Visibility="Hidden" />
+
+                    <ui:Snackbar x:Name="RootSnackBar" Grid.Row="1" Margin="18" VerticalAlignment="Bottom" />
                     <modernWpf:AnimatedContentControl Grid.Row="1" Margin="10" s:View.Model="{Binding ActiveItem}" />
                 </Grid>
             </Border>
+
+            <ui:Dialog Grid.Column="1" x:Name="RootContentDialog" />
         </Grid>
     </Grid>
 </ui:UiWindow>

@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace TechSolveHR.ModernWPF;
 
-public class EmployeeGroupKeyConverter : IValueConverter
+public class GroupKeyConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
         ((string) value).Substring(0, 1).ToUpper();

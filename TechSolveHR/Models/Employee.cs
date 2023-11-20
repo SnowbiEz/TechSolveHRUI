@@ -11,6 +11,8 @@ public class Employee
 
     public virtual Employee? Manager { get; set; }
 
+    public Guid? ManagerId { get; set; }
+
     public Guid Id { get; set; }
 
     public virtual List<Attendance> Attendances { get; set; } = new();
@@ -63,7 +65,7 @@ public class Performance
 
     public string? Feedback { get; set; }
 
-    public string? Grade { get; set; }
+    public int? Rating { get; set; }
 }
 
 public class Attendance
@@ -85,7 +87,7 @@ public class Address
 
     public string? State { get; set; }
 
-    public string? StreetAddress { get; set; }
+    public string? Street { get; set; }
 
     public string? ZipCode { get; set; }
 }
@@ -117,6 +119,10 @@ public class PersonalInformation
     public DateTimeOffset? DateOfHire { get; set; }
 
     public Guid Id { get; set; }
+
+    public string Name => $"{FirstName} {LastName}";
+
+    public string FullName => $"{FirstName} {MiddleName} {LastName}";
 
     public string? FirstName { get; set; }
 

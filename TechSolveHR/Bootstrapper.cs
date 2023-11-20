@@ -16,6 +16,8 @@ namespace TechSolveHR;
 
 public class Bootstrapper : Bootstrapper<MainWindowViewModel>
 {
+    private IStyletIoCBuilder _builder;
+
     public Bootstrapper()
     {
         // Make Hyperlinks handle themselves
@@ -59,5 +61,9 @@ public class Bootstrapper : Bootstrapper<MainWindowViewModel>
 
         builder.Bind<IThemeService>().To<ThemeService>().InSingletonScope();
         builder.Bind<ISnackbarService>().To<SnackbarService>().InSingletonScope();
+        builder.Bind<IDialogService>().To<DialogService>().InSingletonScope();
+        builder.Bind<IStyletIoCBuilder>().ToInstance(builder);
+
+        _builder = builder;
     }
 }

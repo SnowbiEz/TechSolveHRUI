@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Stylet;
 using StyletIoC;
 using TechSolveHR.Models;
+using Wpf.Ui.Common;
+using Wpf.Ui.Mvvm.Contracts;
 
 namespace TechSolveHR.ViewModels;
 
@@ -12,13 +14,15 @@ public class LoginViewModel : Screen
 {
     private readonly IEventAggregator _events;
     private readonly IContainer _ioc;
+    private readonly ISnackbarService _snackbar;
     private readonly MainWindowViewModel _main;
 
-    public LoginViewModel(IContainer ioc, IEventAggregator events, MainWindowViewModel main)
+    public LoginViewModel(IEventAggregator events, IContainer ioc, ISnackbarService snackbar, MainWindowViewModel main)
     {
-        _ioc    = ioc;
-        _events = events;
-        _main   = main;
+        _events   = events;
+        _ioc      = ioc;
+        _snackbar = snackbar;
+        _main     = main;
     }
 
     public bool LoginError { get; set; }
@@ -30,13 +34,12 @@ public class LoginViewModel : Screen
     public async Task Login()
     {
         LoginError = true;
+        NotifyOfPropertyChange(() => LoginError);
+
+        if (string.IsNullOrEmpty(Password)) return;
+        if (string.IsNullOrEmpty(Username)) return;
 
         var db = _ioc.Get<DatabaseContext>();
-        _events.Publish(new LoggedInEvent(db.Employees.First()));
-
-        return;
-        if (string.IsNullOrWhiteSpace(Username)) return;
-        if (string.IsNullOrWhiteSpace(Password)) return;
 
         var employee = await db.Employees.FirstOrDefaultAsync(x => x.Username == Username);
         if (employee == null) return;

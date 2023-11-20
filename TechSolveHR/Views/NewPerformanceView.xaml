@@ -1,0 +1,45 @@
+﻿<UserControl
+    x:Class="TechSolveHR.Views.NewPerformanceView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
+
+    xmlns:modern="http://schemas.modernwpf.com/2019"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:viewModels="clr-namespace:TechSolveHR.ViewModels"
+
+    d:DataContext="{d:DesignInstance Type=viewModels:NewPerformanceViewModel}">
+    <ui:DynamicScrollViewer>
+        <modern:SimpleStackPanel MinWidth="500">
+            <GroupBox Header="Select Employee">
+                <ComboBox
+                    ItemsSource="{Binding Employees}" SelectedItem="{Binding SelectedEmployee}"
+                    DisplayMemberPath="Data.Name" />
+            </GroupBox>
+
+            <GroupBox Header="Performance Review">
+                <modern:SimpleStackPanel>
+                    <ui:TextBox PlaceholderText="Title" Text="{Binding Performance.Title}" />
+                    <ui:TextBox PlaceholderText="Category" Text="{Binding Performance.Category}" />
+                    <ui:TextBox Icon="NotepadPerson20" PlaceholderText="Feedback"
+                                Text="{Binding Performance.Feedback}"
+                                TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True" />
+                    <modern:SimpleStackPanel Orientation="Horizontal">
+                        <TextBlock Text="Rating" />
+                        <Slider
+                            Minimum="0" Maximum="5" TickFrequency="1" IsSnapToTickEnabled="True"
+                            Value="{Binding Performance.Rating}" />
+                        <ui:Rating Value="{Binding Performance.Rating}" />
+                    </modern:SimpleStackPanel>
+                </modern:SimpleStackPanel>
+            </GroupBox>
+            <modern:SimpleStackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <ui:Button Command="{s:Action Cancel}" Appearance="Danger">Cancel</ui:Button>
+                <ui:Button Command="{s:Action CreateNewPerformance}" Appearance="Primary">Create</ui:Button>
+            </modern:SimpleStackPanel>
+        </modern:SimpleStackPanel>
+    </ui:DynamicScrollViewer>
+</UserControl>

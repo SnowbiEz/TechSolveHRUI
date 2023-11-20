@@ -25,7 +25,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="modern:SimpleStackPanel">
-                <Setter Property="Spacing" Value="10" />
+                <Setter Property="Spacing" Value="8" />
                 <Style.Resources>
                     <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
                         <Setter Property="MinWidth" Value="100" />

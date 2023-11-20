@@ -1,7 +1,7 @@
-﻿using Stylet;
-using StyletIoC;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Stylet;
+using StyletIoC;
 using TechSolveHR.Models;
 
 namespace TechSolveHR.ViewModels;
@@ -13,14 +13,13 @@ public class AttendanceViewModel : Screen
 
     public AttendanceViewModel(IContainer ioc, MainWindowViewModel main)
     {
-        _ioc = ioc;
+        _ioc  = ioc;
         _main = main;
     }
 
-    public BindableCollection<Attendance> Attendances { get; set; } = new();
-
-    
     public Attendance? SelectedAttendance { get; set; }
+
+    public BindableCollection<Attendance> Attendances { get; set; } = new();
 
     public void OnAttendanceSelected() { }
 
@@ -30,29 +29,29 @@ public class AttendanceViewModel : Screen
 
         _main.LoggedInUser!.Attendances = new List<Attendance>
         {
-            new Attendance
+            new()
             {
-                TimeIn = DateTimeOffset.UtcNow,
+                TimeIn  = DateTimeOffset.UtcNow,
                 TimeOut = DateTimeOffset.UtcNow.AddHours(8)
             },
-            new Attendance
+            new()
             {
-                TimeIn = DateTimeOffset.UtcNow.AddMinutes(Random.Shared.Next(120)),
+                TimeIn  = DateTimeOffset.UtcNow.AddMinutes(Random.Shared.Next(120)),
                 TimeOut = DateTimeOffset.UtcNow.AddHours(8).AddMinutes(Random.Shared.Next(120))
             },
-            new Attendance
+            new()
             {
-                TimeIn = DateTimeOffset.UtcNow.AddMinutes(Random.Shared.Next(120)),
+                TimeIn  = DateTimeOffset.UtcNow.AddMinutes(Random.Shared.Next(120)),
                 TimeOut = DateTimeOffset.UtcNow.AddHours(8).AddMinutes(Random.Shared.Next(120))
             },
-            new Attendance
+            new()
             {
-                TimeIn = DateTimeOffset.UtcNow.AddMinutes(Random.Shared.Next(120)),
+                TimeIn  = DateTimeOffset.UtcNow.AddMinutes(Random.Shared.Next(120)),
                 TimeOut = DateTimeOffset.UtcNow.AddHours(8).AddMinutes(Random.Shared.Next(120))
             },
-            new Attendance
+            new()
             {
-                TimeIn = DateTimeOffset.UtcNow.AddMinutes(Random.Shared.Next(120)),
+                TimeIn  = DateTimeOffset.UtcNow.AddMinutes(Random.Shared.Next(120)),
                 TimeOut = DateTimeOffset.UtcNow.AddHours(8).AddMinutes(Random.Shared.Next(120))
             }
         };

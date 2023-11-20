@@ -17,10 +17,10 @@
 
     d:DataContext="{d:DesignInstance Type=viewModels:EmployeeListViewModel}">
     <UserControl.Resources>
-        <modernWpf:EmployeeGroupKeyConverter x:Key="EmployeeGroupKeyConverter" />
-        <CollectionViewSource x:Key="Tracks" Source="{Binding FilteredEmployees}">
+        <modernWpf:GroupKeyConverter x:Key="GroupKeyConverter" />
+        <CollectionViewSource x:Key="CollectionSource" Source="{Binding FilteredEmployees}">
             <CollectionViewSource.GroupDescriptions>
-                <PropertyGroupDescription PropertyName="Data.FirstName" Converter="{StaticResource EmployeeGroupKeyConverter}" />
+                <PropertyGroupDescription PropertyName="Data.FirstName" Converter="{StaticResource GroupKeyConverter}" />
             </CollectionViewSource.GroupDescriptions>
             <CollectionViewSource.SortDescriptions>
                 <componentModel:SortDescription PropertyName="Data.FirstName" />
@@ -43,7 +43,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <modern:SimpleStackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <modern:SimpleStackPanel Grid.Column="0" MinWidth="200" VerticalAlignment="Center">
                         <TextBlock FontWeight="Bold">
                             <Run Text="{Binding Data.FirstName}" />
                             <Run Text="{Binding Data.LastName}" />
@@ -60,22 +60,31 @@
                         </TextBlock>
                     </modern:SimpleStackPanel>
 
-                    <modern:SimpleStackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <modern:SimpleStackPanel Grid.Column="1" MinWidth="150" HorizontalAlignment="Center" VerticalAlignment="Center">
 
                         <modern:SimpleStackPanel.Resources>
                             <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
                                 <Setter Property="MinWidth" Value="200" />
                                 <Setter Property="FontSize" Value="11" />
-                                <Setter Property="IsReadOnly" Value="True"></Setter>
+                                <Setter Property="IsReadOnly" Value="True" />
                             </Style>
                         </modern:SimpleStackPanel.Resources>
 
-                        <ui:TextBox Icon="Mail20" Text="{Binding EmailAddress}" />
-                        <ui:TextBox Icon="Building20" Text="{Binding Data.TelephoneNumber}" />
-                        <ui:TextBox Icon="Phone20" Text="{Binding Data.PhoneNumber}" />
+                        <modern:SimpleStackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="Mail20" />
+                            <TextBlock Text="{Binding EmailAddress}" />
+                        </modern:SimpleStackPanel>
+                        <modern:SimpleStackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="Building20" />
+                            <TextBlock Text="{Binding Data.TelephoneNumber}" />
+                        </modern:SimpleStackPanel>
+                        <modern:SimpleStackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="Phone20" />
+                            <TextBlock Text="{Binding Data.PhoneNumber}" />
+                        </modern:SimpleStackPanel>
                     </modern:SimpleStackPanel>
 
-                    <modern:SimpleStackPanel Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <modern:SimpleStackPanel Grid.Column="2" MinWidth="200" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <modern:SimpleStackPanel Orientation="Horizontal">
                             <ui:SymbolIcon Symbol="PersonMail20" />
                             <TextBlock>
@@ -102,7 +111,7 @@
         <ListView
             Grid.Row="1" Margin="0,5"
 
-            ItemsSource="{Binding Source={StaticResource Tracks}}"
+            ItemsSource="{Binding Source={StaticResource CollectionSource}}"
             ItemTemplate="{StaticResource ListViewTemplate}"
             VirtualizingPanel.IsVirtualizingWhenGrouping="True"
             VirtualizingPanel.VirtualizationMode="Recycling"

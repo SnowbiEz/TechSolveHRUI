@@ -17,22 +17,28 @@ namespace TechSolveHR.ViewModels;
 public class MainWindowViewModel : Conductor<IScreen>,
     IHandle<LoggedInEvent>, IHandle<LoggedOutEvent>
 {
+    public static MainWindowView MainView = null!;
     public static NavigationStore Navigation = null!;
+    private readonly IDialogService _dialog;
     private readonly IEventAggregator _events;
     private readonly IContainer _ioc;
+    private readonly ISnackbarService _snackbar;
     private readonly IThemeService _theme;
 
-    public MainWindowViewModel(IContainer ioc, IEventAggregator events, IThemeService theme)
+    public MainWindowViewModel(IStyletIoCBuilder builder)
     {
         Title = $"Tech Solve HR System {SettingsPageViewModel.ProgramVersion}";
 
-        _ioc    = ioc;
-        _events = events;
-        _theme  = theme;
+        builder.Bind<MainWindowViewModel>().ToInstance(this);
+        _ioc      = builder.BuildContainer();
+        _events   = _ioc.Get<IEventAggregator>();
+        _theme    = _ioc.Get<IThemeService>();
+        _snackbar = _ioc.Get<ISnackbarService>();
+        _dialog   = _ioc.Get<IDialogService>();
 
-        events.Subscribe(this);
+        _events.Subscribe(this);
 
-        var db = ioc.Get<DatabaseContext>();
+        var db = _ioc.Get<DatabaseContext>();
 
         if (!db.Employees.Any())
         {
@@ -62,10 +68,10 @@ public class MainWindowViewModel : Conductor<IScreen>,
                     DateOfHire    = new DateTime(2021, 1, 1),
                     Address = new Address
                     {
-                        StreetAddress = "1234 Main St",
-                        City          = "Columbus",
-                        State         = "OH",
-                        ZipCode       = "43215"
+                        Street  = "1234 Main St",
+                        City    = "Columbus",
+                        State   = "OH",
+                        ZipCode = "43215"
                     },
                     MaritalStatus   = "Single",
                     PhilHealth      = "123456789012",
@@ -103,10 +109,10 @@ public class MainWindowViewModel : Conductor<IScreen>,
                     DateOfHire    = DateTime.Now,
                     Address = new Address
                     {
-                        StreetAddress = "5678 Elm St",
-                        City          = "Columbus",
-                        State         = "OH",
-                        ZipCode       = "43215"
+                        Street  = "5678 Elm St",
+                        City    = "Columbus",
+                        State   = "OH",
+                        ZipCode = "43215"
                     },
                     MaritalStatus   = "Single",
                     PhilHealth      = "987654321098",
@@ -122,26 +128,31 @@ public class MainWindowViewModel : Conductor<IScreen>,
             db.SaveChanges();
         }
 
-        SettingsPage     = new SettingsPageViewModel(ioc, this);
-        LoginPage        = new LoginViewModel(ioc, events, this);
-        HomePage         = new HomeViewModel(ioc, this);
-        PersonalInfoPage = new PersonalInfoViewModel(ioc, this);
-        EmployeeListPage = new EmployeeListViewModel(ioc, this);
-        RegistrationPage = new RegistrationViewModel(ioc, this);
-        AttendancePage = new AttendanceViewModel(ioc, this);
+        SettingsPage     = _ioc.Get<SettingsPageViewModel>();
+        LoginPage        = _ioc.Get<LoginViewModel>();
+        AdminPage        = _ioc.Get<AdminViewModel>();
+        PersonalInfoPage = _ioc.Get<PersonalInfoViewModel>();
+        EmployeeListPage = _ioc.Get<EmployeeListViewModel>();
+        RegistrationPage = _ioc.Get<RegistrationViewModel>();
+        AttendancePage   = _ioc.Get<AttendanceViewModel>();
+        PerformancePage  = _ioc.Get<PerformanceViewModel>();
     }
 
-    public bool IsLoggedIn => true || LoggedInUser is not null;
+    public AdminViewModel AdminPage { get; }
+
+    public AttendanceViewModel AttendancePage { get; }
+
+    public bool IsAdmin => LoggedInUser is { AccessType: "Admin" };
+
+    public bool IsLoggedIn => LoggedInUser is not null;
 
     public Employee? LoggedInUser { get; set; }
 
     public EmployeeListViewModel EmployeeListPage { get; }
 
-    public HomeViewModel HomePage { get; }
-
     public LoginViewModel LoginPage { get; }
 
-    public AttendanceViewModel AttendancePage { get; }
+    public PerformanceViewModel PerformancePage { get; }
 
     public PersonalInfoViewModel PersonalInfoPage { get; }
 
@@ -156,7 +167,7 @@ public class MainWindowViewModel : Conductor<IScreen>,
     public void Handle(LoggedInEvent message)
     {
         LoggedInUser = message.Employee;
-        NavigateToItem(HomePage);
+        NavigateToItem(AdminPage);
     }
 
     public void Handle(LoggedOutEvent message) => throw new NotImplementedException();
@@ -185,10 +196,18 @@ public class MainWindowViewModel : Conductor<IScreen>,
 
     protected override async void OnViewLoaded()
     {
-        Navigation = ((MainWindowView) View).RootNavigation;
+        MainView   = (MainWindowView) View;
+        Navigation = MainView.RootNavigation;
         SettingsPage.OnThemeChanged();
 
         NavigateToItem(FirstPage);
+
+        MainView.RootSnackBar.Timeout = (int) TimeSpan.FromSeconds(2).TotalMilliseconds;
+        _snackbar.SetSnackbarControl(MainView.RootSnackBar);
+        _dialog.SetDialogControl(MainView.RootContentDialog);
+
+        await _snackbar.ShowAsync("Welcome!", "Welcome to Tech Solve HR System",
+            SymbolRegular.RibbonStar24, ControlAppearance.Primary);
     }
 
     private void NavigateToItem(IScreen viewModel)
