@@ -61,6 +61,15 @@
                     </TextBlock>
                 </modern:SimpleStackPanel>
             </GroupBox>
+            <GroupBox Header="Generate Data">
+                <modern:SimpleStackPanel Orientation="Horizontal">
+                    <ui:NumberBox
+                        PlaceholderText="Number of Employees"
+                        SpinButtonPlacementMode="Inline"
+                        Value="{Binding AmountToGenerate, Mode=TwoWay}" />
+                    <ui:Button Icon="AppGeneric20" Command="{s:Action GenerateFakeData}">Generate</ui:Button>
+                </modern:SimpleStackPanel>
+            </GroupBox>
         </modern:SimpleStackPanel>
     </ScrollViewer>
 </UserControl>

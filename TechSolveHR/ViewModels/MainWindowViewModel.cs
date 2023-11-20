@@ -1,8 +1,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Helpers;
-using System.Windows.Media;
 using Humanizer;
 using ModernWpf;
 using Stylet;
@@ -38,85 +36,6 @@ public class MainWindowViewModel : Conductor<IScreen>
         _theme    = _ioc.Get<IThemeService>();
         _snackbar = _ioc.Get<ISnackbarService>();
         _dialog   = _ioc.Get<IDialogService>();
-
-        var db = _ioc.Get<DatabaseContext>();
-
-        if (!db.Employees.Any())
-        {
-            var employee1 = new Employee
-            {
-                AccessType = "Admin",
-                Username   = "charlie",
-                Password   = Crypto.HashPassword("password"),
-                CompanyId  = "1",
-                Status     = "Active",
-                Department = "Human Resources",
-                Division   = "Tech Solve",
-                Title      = "HR Manager",
-                Data = new PersonalInformation
-                {
-                    FirstName     = "Charlotte",
-                    MiddleName    = "Rose",
-                    LastName      = "Doyle",
-                    PreferredName = "Charlie",
-                    Gender        = "Female",
-                    DateOfBirth   = new DateTime(1999, 1, 1),
-                    DateOfHire    = new DateTime(2021, 1, 1),
-                    Address = new Address
-                    {
-                        Street  = "1234 Main St",
-                        City    = "Columbus",
-                        State   = "OH",
-                        ZipCode = "43215"
-                    },
-                    MaritalStatus   = "Single",
-                    PhilHealth      = "123456789012",
-                    Sss             = "12345678901234567",
-                    PhoneNumber     = "1234567890",
-                    TelephoneNumber = "1234567890",
-                    Tin             = "1234567890"
-                }
-            };
-
-            var employee2 = new Employee
-            {
-                Username   = "manager",
-                Password   = Crypto.HashPassword("password"),
-                Manager    = employee1,
-                CompanyId  = "2",
-                Status     = "Active",
-                Department = "Human Resources",
-                Division   = "Tech Solve",
-                Title      = "Manager",
-                Data = new PersonalInformation
-                {
-                    FirstName     = "John",
-                    MiddleName    = "Doe",
-                    LastName      = "Smith",
-                    PreferredName = "John",
-                    Gender        = "Male",
-                    DateOfBirth   = new DateTime(1985, 5, 10),
-                    DateOfHire    = DateTime.Now,
-                    Address = new Address
-                    {
-                        Street  = "5678 Elm St",
-                        City    = "Columbus",
-                        State   = "OH",
-                        ZipCode = "43215"
-                    },
-                    MaritalStatus   = "Single",
-                    PhilHealth      = "987654321098",
-                    Sss             = "98765432109876543",
-                    PhoneNumber     = "0987654321",
-                    TelephoneNumber = "0987654321",
-                    Tin             = "0987654321"
-                }
-            };
-
-            db.Employees.Add(employee1);
-            db.Employees.Add(employee2);
-            db.SaveChanges();
-        }
 
         HomePage         = _ioc.Get<HomeViewModel>();
         SettingsPage     = _ioc.Get<SettingsPageViewModel>();
@@ -163,6 +82,20 @@ public class MainWindowViewModel : Conductor<IScreen>
 
     public SymbolRegular LogIcon => IsLoggedIn ? SymbolRegular.DoorArrowLeft20 : SymbolRegular.Person12;
 
+    public async Task Login(Employee employee)
+    {
+        LoggedInUser = employee;
+
+        _attendance = new Attendance
+        {
+            TimeIn = DateTimeOffset.UtcNow
+        };
+
+        NavigateToItem(HomePage);
+        await _snackbar.ShowAsync("Welcome!", $"You have successfully logged in as {LoggedInUser.Data.Name}.",
+            SymbolRegular.WeatherSunny20, ControlAppearance.Primary);
+    }
+
     public async Task Logout()
     {
         if (LoggedInUser is null || _attendance is null) return;
@@ -177,25 +110,11 @@ public class MainWindowViewModel : Conductor<IScreen>
             await db.SaveChangesAsync();
         }
 
-        await _snackbar.ShowAsync("Goodbye", $"You have logged out. Today you worked for {_attendance.Length.Humanize()}.",
+        await _snackbar.ShowAsync("Goodbye",
+            $"You have logged out. Today you worked for {_attendance.Length.Humanize()}.",
             SymbolRegular.WeatherMoon20, ControlAppearance.Secondary);
 
         LoggedInUser = null;
-    }
-
-    public async Task Login(Employee employee)
-    {
-        LoggedInUser = employee;
-
-        _attendance = new Attendance
-        {
-            TimeIn = DateTimeOffset.UtcNow
-        };
-
-        NavigateToItem(HomePage);
-        await _snackbar.ShowAsync("Welcome!", $"You have successfully logged in as {LoggedInUser.Data.Name}.",
-            SymbolRegular.WeatherSunny20, ControlAppearance.Primary);
-      
     }
 
     public void Navigate(INavigation sender, RoutedNavigationEventArgs args)

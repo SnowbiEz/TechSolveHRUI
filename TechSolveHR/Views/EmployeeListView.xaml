@@ -38,9 +38,9 @@
 
                 <Grid Column="1" Margin="16,0,0,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" SharedSizeGroup="Name" />
+                        <ColumnDefinition Width="*" SharedSizeGroup="Contact" />
+                        <ColumnDefinition Width="*" SharedSizeGroup="Report" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
@@ -52,7 +52,7 @@
 
                         <TextBlock FontSize="11">
                             <Run Text="{Binding Title}" /> in
-                            <Run Text="{Binding Department.Name, FallbackValue='Unknown'}" />
+                            <Run Text="{Binding Department, FallbackValue='Unknown'}" />
                         </TextBlock>
 
                         <TextBlock FontSize="11">
@@ -61,9 +61,7 @@
                         </TextBlock>
                     </modern:SimpleStackPanel>
 
-                    <modern:SimpleStackPanel Grid.Column="1" MinWidth="150" HorizontalAlignment="Center"
-                                             VerticalAlignment="Center">
-
+                    <modern:SimpleStackPanel Grid.Column="1" MinWidth="150" HorizontalAlignment="Left" VerticalAlignment="Center">
                         <modern:SimpleStackPanel.Resources>
                             <Style TargetType="ui:TextBox" BasedOn="{StaticResource {x:Type ui:TextBox}}">
                                 <Setter Property="MinWidth" Value="200" />
@@ -86,8 +84,7 @@
                         </modern:SimpleStackPanel>
                     </modern:SimpleStackPanel>
 
-                    <modern:SimpleStackPanel Grid.Column="2" MinWidth="200" HorizontalAlignment="Center"
-                                             VerticalAlignment="Center">
+                    <modern:SimpleStackPanel Grid.Column="2" MinWidth="200" HorizontalAlignment="Left">
                         <modern:SimpleStackPanel Orientation="Horizontal">
                             <ui:SymbolIcon Symbol="PersonMail20" />
                             <TextBlock>

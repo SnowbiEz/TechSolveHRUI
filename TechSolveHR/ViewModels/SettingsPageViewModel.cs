@@ -35,11 +35,24 @@ public class SettingsPageViewModel : Screen
     public static CaptionedObject<Transition>? Transition { get; set; } =
         TransitionCollection.Transitions[0];
 
+    public int AmountToGenerate { get; set; }
+
     public string Password { get; set; } = string.Empty;
 
     public string Username { get; set; } = string.Empty;
 
     public static Version ProgramVersion => Assembly.GetExecutingAssembly().GetName().Version!;
+
+    public async Task GenerateFakeData()
+    {
+        var db = _ioc.Get<DatabaseContext>();
+        db.Employees.AddRange(ExampleData.GenerateEmployees(AmountToGenerate));
+        await db.SaveChangesAsync();
+
+        var service = _ioc.Get<ISnackbarService>();
+        await service.ShowAsync("Success", "Successfully generated fake data.",
+            SymbolRegular.PersonAdd20, ControlAppearance.Success);
+    }
 
     public async Task Save()
     {

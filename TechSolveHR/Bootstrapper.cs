@@ -1,6 +1,8 @@
 ﻿using System.Configuration;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Web.Helpers;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Navigation;
@@ -34,27 +36,29 @@ public class Bootstrapper : Bootstrapper<MainWindowViewModel>
         );
     }
 
+
     protected override void ConfigureIoC(IStyletIoCBuilder builder)
     {
-        var config = ConfigurationManager
-            .OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
-
-        var path = Path.GetDirectoryName(config.FilePath);
-        if (!Directory.Exists(path))
-            Directory.CreateDirectory(path!);
-
         builder.Bind<DatabaseContext>().ToFactory(_ =>
         {
-            var source = Path.Combine(path!, "hr_data.db");
-
             var options = new DbContextOptionsBuilder<DatabaseContext>()
                 .UseLazyLoadingProxies()
-                .UseSqlite($"Data Source={source}")
-                
+                .UseSqlite("Data Source=hr_data.db")
                 .Options;
 
             var db = new DatabaseContext(options);
             db.Database.EnsureCreated();
+
+            if (db.Employees.Any()) return db;
+
+            db.Employees.Add(new Employee
+            {
+                AccessType = "Admin",
+                Username   = "admin",
+                Password   = Crypto.HashPassword("password"),
+            });
+
+            db.SaveChanges();
 
             return db;
         });
