@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Stylet;
 using StyletIoC;
 using TechSolveHR.Models;
@@ -39,11 +40,11 @@ public class EmployeeListViewModel : Screen
 
     public void Activate() => OnActivate();
 
-    public void DeleteEmployee(Employee employee)
+    public async Task DeleteEmployee(Employee employee)
     {
-        var db = _ioc.Get<DatabaseContext>();
+        await using var db = _ioc.Get<DatabaseContext>();
         db.Employees.Remove(employee);
-        db.SaveChanges();
+        await db.SaveChangesAsync();
 
         OnActivate();
     }
